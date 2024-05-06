@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mybatis.mapper.Mapper">
+
+    <!--
+        작성자 : 이유리
+        작성일자 : 24.02.26
+        기능 : 로그인 (mapper)
+    -->
+    <select id="login" parameterType="String" resultType="com.vo.EmpVO">
+        SELECT
+            emp_no, team_no, team_name, emp_access, emp_position, dayoff_yn, dayoff_cnt, emp_year, hire_date, retire_date, emp_state,
+            password, name, email, birthdate, phone_num, address, reg_date, mod_date, profile_img
+        from emp natural join team
+        WHERE emp_no=#{value}
+    </select>
+
+    <select id="findId" parameterType="Map" resultType="String">
+        SELECT emp_no
+        FROM emp
+        WHERE  name = #{name} AND email = #{email}
+    </select>
+
+    <select id="emp_no" parameterType="String" resultType="String">
+        SELECT email
+        FROM emp
+        WHERE  emp_no = #{emp_no}
+    </select>
+
+    <update id="updatePw" parameterType="com.best.kgw.auth.EmailMessage">
+        UPDATE EMP
+        SET password = #{encPW}
+        WHERE EMAIL = #{to}
+    </update>
+
+</mapper>

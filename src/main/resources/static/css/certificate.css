@@ -1,0 +1,23 @@
+
+table, td, th {
+    border : 1px solid black;
+    border-collapse : collapse;
+}
+table {
+    width : 70%;
+    height: 30%;
+    margin: auto;
+}
+th, td {
+    text-align: center;
+}
+
+
+
+@media print {
+
+    .print-button { display:none;} : print상태(Alt+p)가 될 경우 제외시킨다.
+a[href]::after {
+    content: none !important;
+}
+}

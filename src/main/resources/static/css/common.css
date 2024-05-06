@@ -1,0 +1,179 @@
+@charset "UTF-8";
+/**{*/
+/*  border : red solid 1px;*/
+/*}*/
+
+/* General Links */
+/* **********************<< 공통 CSS >>*********************** */
+. {
+  font-family: "맑은 고딕";
+}
+
+html, body {
+  /*font-family: "맑은 고딕";*/
+  font-size: 14px;
+}
+
+a {
+  color: #343a40;
+  text-decoration: none;
+}
+a:hover,
+a:active,
+a:focus {
+  outline: none;
+  text-decoration: none;
+  color: #000;
+}
+
+.content input:focus {
+  border-color: #b02a37;
+  outline: 0;
+  /*box-shadow: 0 0 0 0.25rem rgba(108, 117, 125, 0.25);*/
+  box-shadow: 0 0 0 0.25rem rgba(176, 42, 55, 0.73);
+}
+.content textarea:focus {
+  border-color: #b02a37;
+  outline: 0;
+  /*box-shadow: 0 0 0 0.25rem rgba(108, 117, 125, 0.25);*/
+  box-shadow: 0 0 0 0.25rem rgba(176, 42, 55, 0.73);
+}
+
+.signImg:hover {
+  border-color: #b02a37;
+  outline: 0;
+  /*box-shadow: 0 0 0 0.25rem rgba(108, 117, 125, 0.25);*/
+  box-shadow: 0 0 0 0.25rem rgba(176, 42, 55, 0.73);
+  cursor: pointer;
+}
+
+/* 페이지 path */
+.card {
+  width: 100%;
+  height: 100px;
+  padding: 16px;
+  /*background-color: #f1f1f1;*/
+  background-color: rgba(241, 241, 241, 0);
+  border-radius: 0;
+}
+.position-relative {
+  width: 16.25px;
+  height: 16px;
+}
+.position-absolute {
+  width: 13.35px;
+  height: 12.71px;
+  background-color: rgba(0, 0, 0, 0.85);
+}
+
+/* 게시판 */
+.board-detail {
+  display: flex;
+}
+.board-list {
+  margin: 20px 0px;
+}
+
+/* 페이지처리 */
+
+.page-link{
+  color: black;
+}
+.page-link:hover{
+  background: #a42633;
+  color: white;
+}
+.page-link:focus{
+  background: #a42633;
+  color: white;
+  outline: 0;
+  box-shadow: none;
+}
+.pagination{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* box*/
+.box {
+  position: relative;
+  border-radius: 5px;
+  background: #ffffff;
+  border-top: 4px solid #d2d6de;
+  /*margin-top: 10px;*/
+  /*margin-bottom: 20px;*/
+  margin: 0 5px 20px 5px;
+  width: calc(100% - 10px);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  padding: 1rem 2rem 5px 2rem;
+
+}
+
+.box-header {
+  padding: 20px 0px;
+}
+
+/* 버튼 */
+.box .btn {
+  /*background-color: #a42633;*/
+  background-color: #7c1512;
+  border: none;
+  font-weight: bold;
+}
+
+.box .btn:hover {
+  background-color: #494747;
+  border: none;
+}
+
+select.form-select:focus{
+  border-color: #b02a37;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(176, 42, 55, 0.73);
+}
+
+hr{
+  height: 1px;
+  background-color: grey;
+  border: 0;
+}
+
+.modal-body .btn{
+  background-color: #7c1512;
+  border: none;
+  font-weight: bold;
+}
+
+.modal-body .btn:hover {
+  background-color: #494747;
+  border: none;
+}
+
+@media (max-width: 1920px) {
+  .img-circle {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+
+@media (max-width: 1500px) {
+  .text{
+    display: none;
+  };
+}
+
+@media (max-width: 1500px) {
+  .text2 {
+    margin: auto;
+  }
+}
+.form-check-input:checked {
+  background-color: rgba(101, 44, 44, 0.71) !important;
+  border-color: #652C2C;
+}
+
+.swal2-small {
+  font-size: 12px;
+}

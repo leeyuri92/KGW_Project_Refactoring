@@ -1,0 +1,48 @@
+server:
+  tomcat:
+    additional-tld-skip-patterns: "*.jar" #orai18n??
+  port: 9000
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+    session:
+      timeout: 300
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 50MB
+  datasource:
+    hikari:
+      jdbc-url: jdbc:oracle:thin:@(description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.ap-chuncheon-1.oraclecloud.com))(connect_data=(service_name=ga45479ea3c71df_l4hrfixp1sgbh0pd_medium.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+      username: ADMIN
+      password: Abcd12345678
+      driver-class-name: oracle.jdbc.OracleDriver
+      connection-timeout: 20000
+      validation-timeout: 3000
+      minimum-idle: 5
+      maximum-pool-size: 12
+      idle-timeout: 300000
+      max-lifetime: 1200000
+      auto-commit: true
+      pool-name: oraPool
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: bestofuniversity
+    password: jsvxakzxeiqjpvls
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
+

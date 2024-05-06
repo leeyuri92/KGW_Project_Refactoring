@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mybatis.mapper.AttendanceMapper">
+
+    <insert id="insertData" parameterType="com.vo.AttendanceVO">
+        insert into attendance (attendance_no, emp_no, work_date, start_time, end_time, state, reg_date)
+        values (attendance_pk_seq.nextval, #{emp_no}, to_char(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul','YYYY-MM-DD'), #{start_time, jdbcType=VARCHAR}, #{end_time, jdbcType=VARCHAR}, #{state, jdbcType=VARCHAR}, to_char(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul', 'YYYY-MM-DD HH24:MI:SS'))
+    </insert>
+
+    <update id="updateData" parameterType="com.vo.AttendanceVO">
+        update attendance set
+            end_time = #{end_time},
+            state = CASE
+                    WHEN #{start_time} &lt; '09:00:00' AND #{end_time} &lt; '18:00:00' THEN '조퇴'
+                    WHEN #{start_time} &lt; '09:00:00' AND #{end_time} &gt; '18:00:00' THEN '정상출근'
+                    WHEN #{start_time} &gt; '09:00:00' AND #{end_time} &gt; '18:00:00' THEN '지각'
+                    ELSE '비정상출근'
+                END
+        where attendance_no = #{attendance_no}
+    </update>
+
+    <select id="selectDate" parameterType="int" resultType="com.vo.AttendanceVO">
+        select attendance_no, b.emp_no, b.name, work_date, start_time, end_time, state, a.reg_date
+        from attendance a join emp b
+        on a.EMP_NO = b.EMP_NO
+        where b.emp_no = #{emp_no}
+          and a.work_date = to_char(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul','YYYY-MM-DD')
+        order by work_date desc
+    </select>
+
+    <select id="selectOne" parameterType="int" resultType="com.vo.AttendanceVO">
+        select attendance_no, emp_no, work_date, start_time, end_time, state, reg_date from attendance
+        where emp_no = #{emp_no}
+        order by work_date desc
+    </select>
+
+    <insert id="insertAbsenteeism">
+        INSERT INTO ATTENDANCE (attendance_no, emp_no, work_date, state)
+        SELECT attendance_pk_seq.nextval, e.emp_no, to_char(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul','YYYY-MM-DD'), '결근'
+        FROM EMP e
+        WHERE NOT EXISTS(
+            SELECT 1
+            FROM ATTENDANCE
+            WHERE work_date is null
+              AND emp_no = e.emp_no
+            )
+    </insert>
+
+    <insert id="attendaceModify" parameterType="com.vo.AttendanceVO">
+        INSERT INTO attendancemodify (attendancemod_no, attendance_no, reg_date, original_start_time, original_end_time,
+                                      original_state, request_content, mod_date)
+        SELECT attendancemod_pk_seq.nextval, attendance_no, reg_date, start_time, end_time, state, #{request_content}, to_char(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul','YYYY-MM-DD HH24:MI:SS')
+        FROM ATTENDANCE
+        where attendance_no = #{attendance_no}
+    </insert>
+
+    <select id="attendaceModList" parameterType="com.vo.AttendanceVO" resultType="com.vo.AttendanceModifyVO">
+        SELECT b.ATTENDANCEMOD_NO, c.name, a.EMP_NO, b.ATTENDANCE_NO, b.REG_DATE, b.ORIGINAL_STATE, b.state, b.mod_date, b.mod_state,
+               b.original_start_time, b.original_end_time
+        FROM attendance a
+                 JOIN attendancemodify b ON a.ATTENDANCE_NO = b.ATTENDANCE_NO
+                 JOIN emp c ON a.EMP_NO = c.EMP_NO
+        <where>
+            <if test="emp_no!=0">AND c.emp_no=#{emp_no}</if>
+            <if test="gubun!=null">
+                <choose>
+                    <when test='gubun.equals("name")'>
+                        AND c.name LIKE '%'||#{keyword}||'%'
+                    </when>
+                    <when test='gubun.equals("state")'>
+                        AND b.state LIKE '%'||#{keyword}||'%'
+                    </when>
+                </choose>
+            </if>
+        </where>
+        order by b.mod_date desc
+    </select>
+
+    <select id="adminModAttendeanceMap" parameterType="com.vo.AttendanceModifyVO" resultType="map">
+        select a.WORK_DATE, a.START_TIME, a.END_TIME, a.STATE, b.REG_DATE, b.MOD_DATE, b.REQUEST_CONTENT, c.name, b.attendancemod_no, b.attendance_no
+        from ATTENDANCE a join ATTENDANCEMODIFY b
+                               on a.ATTENDANCE_NO = b.ATTENDANCE_NO
+        join emp c on a.EMP_NO = c.EMP_NO
+        where b.attendancemod_no = #{attendancemod_no}
+    </select>
+
+    <update id="attendanceModUpdate" parameterType="com.vo.AttendanceModifyVO">
+        update attendancemodify set
+            mod_content = #{mod_content},
+            state = #{state},
+            mod_state = #{mod_state}
+        where attendancemod_no = #{attendancemod_no}
+    </update>
+
+    <update id="attendanceUpdate" parameterType="com.vo.AttendanceModifyVO">
+        update attendance set
+            state = #{mod_state}
+        where attendance_no = #{attendance_no}
+    </update>
+
+    <select id="jsonAttendanceSelect" parameterType="com.vo.AttendanceVO" resultType="com.vo.AttendanceVO">
+        select attendance_no, emp_no, work_date, start_time, end_time, state, reg_date from attendance
+        where emp_no = #{emp_no}
+        and SUBSTR(work_date, 1, 7) = #{work_date}
+        order by work_date desc
+    </select>
+
+</mapper>

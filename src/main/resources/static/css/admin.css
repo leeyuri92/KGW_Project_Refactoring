@@ -1,0 +1,8 @@
+.form-check{
+    border-color: white;
+}
+
+.form-check:checked {
+    background-color: rgba(101, 44, 44, 0.71) !important;
+    border-color: #652C2C;
+}

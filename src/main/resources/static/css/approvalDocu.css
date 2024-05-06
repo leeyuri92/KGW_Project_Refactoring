@@ -1,0 +1,82 @@
+
+#documentButton {
+    display: flex;
+    justify-content: flex-end; /* Align items to the right */
+    gap: 8px; /* Keep the 8px gap between buttons */
+    margin-left: auto; /* Push the container to the right */
+    margin-right: 87px; /* Right margin of 87px */
+}
+
+.frame {
+    max-width: 893px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 40px  auto 50px;
+}
+
+.document-section {
+    margin-bottom: 20px; /* Space below the document section */
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px; /* Increased space between items for wider gaps */
+}
+
+.title {
+    font-weight: bold;
+    margin-right: 10px; /* Space between title and value/input */
+}
+
+.value {
+    margin-right: 20px; /* Space after the value, if next element exists */
+}
+
+input[type="date"] {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 0.375rem 0.75rem;
+}
+
+.text-wrapper-2 {
+    font-weight: normal;
+    color: #333;
+    margin-top: 20px; /* Increased space above the fixed format text */
+}
+
+/*!* Button Section *!*/
+/*.col-md-6.d-flex {*/
+/*    justify-content: flex-end;*/
+/*    padding: 0 15px; !* Align with the frame's padding *!*/
+/*    gap: 8px; !* Space between buttons *!*/
+/*}*/
+
+
+
+
+
+
+select {
+    padding: 0.375rem 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+
+
+.value-input {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 0.375rem 0.75rem;
+    margin-left: 10px;
+    color: #666;
+    font-size: 0.875rem;
+}
+
+.flex-item {
+    display: flex;
+    align-items: center;
+    margin-right: 50px;
+}

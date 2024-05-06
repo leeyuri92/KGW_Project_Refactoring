@@ -1,0 +1,84 @@
+#frame_tool {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    padding: 50px;
+    gap: 200px;
+}
+
+
+#documentButton {
+    display: flex;
+    justify-content: flex-end; /* Align items to the right */
+    gap: 8px; /* Keep the 8px gap between buttons */
+    margin-left: auto; /* Push the container to the right */
+    margin-right: 87px; /* Right margin of 87px */
+}
+
+.document-section {
+    margin-bottom: 20px; /* Space below the document section */
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px; /* Increased space between items for wider gaps */
+}
+.title {
+    font-weight: bold;
+    margin-right: 10px; /* Space between title and value/input */
+}
+
+.value {
+    margin-right: 20px; /* Space after the value, if next element exists */
+}
+
+.frame {
+    background-color: #f0f0f0;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    padding-top: 10px;
+}
+
+.signature-section {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 10px;
+}
+
+.signature-section > * {
+    flex: none;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.signature-section img {
+    object-fit: contain;/
+}
+
+.flex-item {
+    display: flex;
+    align-items: center;
+    margin-right: 50px;
+}
+
+
+.sign img {
+    max-width: 100%;
+    height: auto;
+}
+
+#blank_sign_1 {
+    background-color: #e7f0c3;
+}
+
+#blank_sign_2 {
+    background-color: #f0d9d9;
+}
+

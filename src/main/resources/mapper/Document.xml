@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+ <mapper namespace="com.example.mapper.DocumentMapper">
+
+    <select id="selectDocument" parameterType="com.vo.ApprovalVO" resultType="com.vo.ApprovalVO">
+        SELECT *
+        FROM document LEFT JOIN approval
+            ON document.document_no = approval.document_no
+              <where>
+                <choose>
+                    <when test="storage == 'true'">
+                        AND document.state = '임시저장'
+                        <if test="document_no != null">
+                            AND document.document_no = #{document_no}
+                        </if>
+                        <if test="gubun != null">
+                            <choose>
+                                <when test='gubun.equals("document_title")'>
+                                    AND  document.document_title LIKE '%' || #{keyword} || '%'
+                                </when>
+                                <when test='gubun.equals("document_category")'>
+                                    AND document.document_category LIKE '%' || #{keyword} || '%'
+                                </when>
+                            </choose>
+                        </if>
+                    </when>
+                </choose>
+                <choose>
+                    <when test='storage == "false"'>
+                        AND document.state != '임시저장'
+                        <if test="gubun != null">
+                            <choose>
+                                <when test='gubun.equals("document_title")'>
+                                    AND document.document_title LIKE '%' || #{keyword} || '%'
+                                </when>
+                                <when test='gubun.equals("document_category")'>
+                                    AND document.document_category LIKE '%' || #{keyword} || '%'
+                                </when>
+                                <when test='gubun.equals("state")'>
+                                    AND document.state LIKE '%' || #{keyword} || '%'
+                                </when>
+                            </choose>
+                        </if>
+                    </when>
+                </choose>
+                  <if test="emp_no!=0">AND document.emp_no=#{emp_no}</if>
+              </where>
+
+            order by document.document_no desc
+        </select>
+
+
+
+
+
+
+
+
+        <!--   결재자 select -->
+    <select id="approvalDocument" parameterType="com.vo.ApprovalVO" resultType="com.vo.ApprovalVO">
+        SELECT
+            e.dayoff_cnt, e.name, t.team_name , d.*, a.*
+        FROM
+            document d INNER JOIN approval a
+                                  ON d.document_no = a.document_no
+                       INNER JOIN emp e
+                                  ON d.emp_no = e.emp_no
+                       INNER JOIN  team t
+                                   ON e.team_no = t.team_no
+        <where>
+            <if test="document_no !=null"> AND d.document_no = #{document_no}</if>
+            <if test="gubun != null">
+                <choose>
+                    <when test='gubun.equals("document_title")'>
+                        AND d.document_title LIKE '%' || #{keyword} || '%'
+                    </when>
+                    <when test='gubun.equals("document_category")'>
+                        AND d.document_category LIKE '%' || #{keyword} || '%'
+                    </when>
+                    <when test='gubun.equals("approval_category")'>
+                        AND a.approval_category LIKE '%' || #{keyword} || '%'
+                    </when>
+                    <when test='gubun.equals("name")'>
+                        AND e.name LIKE '%' || #{keyword} || '%'
+                    </when>
+                </choose>
+            </if>
+        </where>
+        order by a.document_no desc
+    </select>
+
+<!--영입 계약필요한 데이터 -->
+    <select id="faTeam" parameterType="com.vo.ApprovalVO" resultType="com.vo.ApprovalVO">
+        SELECT fa_no,
+               fa_team,
+               fa_name ,
+               fa_state,
+               fa_agent
+                FROM fa
+    </select>
+
+
+<!--영입 문서만 insert-->
+    <insert id="documentInsert" parameterType="com.vo.ApprovalVO" useGeneratedKeys="true" keyColumn="document_no" keyProperty="document_no">
+        INSERT INTO document (
+            document_no,
+            emp_no,
+            document_title,
+            document_category,
+            fa_name,
+            start_date,
+            end_date,
+            dayoff_content,
+            salary,
+            contract_term,
+            state,
+            draftday
+        )
+        VALUES (
+               document_pk_seq.nextval,
+               #{emp_no},
+               #{document_title},
+               #{document_category},
+               #{fa_name,jdbcType=VARCHAR},
+               #{start_date,jdbcType=VARCHAR},
+               #{end_date,jdbcType=VARCHAR},
+               #{dayoff_content,jdbcType=VARCHAR},
+               #{salary,jdbcType=INTEGER},
+               #{contract_term,jdbcType=VARCHAR},
+               #{state},
+               to_char(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul','YYYY-MM-DD HH24:MI:SS')
+               )
+    </insert>
+
+
+    <insert id="approvalInsert" parameterType="com.vo.ApprovalVO" >
+        INSERT INTO approval (
+        approval_no, document_no, approval_name,
+        rejection_content, middle_approval_date, final_approval_date, middlesign_name, finalsign_name)
+        VALUES (approval_pk_seq.nextval, #{document_no}, #{approval_name, jdbcType=VARCHAR},
+                #{rejection_content, jdbcType=VARCHAR}, #{middle_approval_date, jdbcType=VARCHAR}, #{final_approval_date, jdbcType=VARCHAR},  #{middlesign_name, jdbcType=VARCHAR}, #{finalsign_name, jdbcType=VARCHAR})
+    </insert>
+
+
+<!--insert 끝 -->
+
+
+    <update id="approvalMiddleModify" parameterType="com.vo.ApprovalVO">
+        update approval
+        set
+        <if test="action == '승인'">
+            approval_category = '최종결재대기',
+            middlesign_name=#{middlesign_name},
+        </if>
+        <if test="action == '반려'">
+            approval_category = '중간결재반려',
+            rejection_content = #{rejection_content},
+        </if>
+        middle_approval_date= to_char(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul','YYYY-MM-DD HH24:MI:SS')
+        where approval_no = #{approval_no}
+    </update>
+
+
+    <update id="approvalFinalModify" parameterType="com.vo.ApprovalVO" >
+        UPDATE approval
+        SET
+        <if test="action == '승인'">
+            approval_category = '최종결재승인',
+            finalsign_name = #{finalsign_name},
+        </if>
+        <if test="action == '반려'">
+            approval_category = '최종결재반려',
+            rejection_content = #{rejection_content},
+        </if>
+        final_approval_date = TO_CHAR(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul', 'YYYY-MM-DD HH24:MI:SS')
+        WHERE approval_no = #{approval_no}
+    </update>
+
+
+    <update id="documentStateModify" parameterType="com.vo.ApprovalVO">
+        UPDATE document
+        SET state = #{state}
+        WHERE document_no = #{document_no}
+    </update>
+
+
+
+
+        <!--    임시정장부분   -->
+    <update id="saveModify" parameterType="com.vo.ApprovalVO">
+    update document
+    set
+        document_category = #{document_category},
+        document_title = #{document_title},
+        start_date = #{start_date,jdbcType=VARCHAR},
+        end_date = #{end_date,jdbcType=VARCHAR},
+        dayoff_content = #{dayoff_content,jdbcType=VARCHAR},
+        fa_name = #{fa_name,jdbcType=VARCHAR},
+        salary = #{salary,jdbcType=INTEGER},
+        contract_term = #{contract_term,jdbcType=VARCHAR},
+        state =  #{state}
+    where document_no = #{document_no}
+    </update>
+
+        <!--임시저장 삭제  걸재+문서동시   approval delete가 먼전이다  fk 의존성으로 생성됐슴으로 -->
+
+    <delete id="documentDelete" parameterType="int">
+        delete from document
+               where document_no= #{document_no}
+    </delete>
+
+    <update id="updateFA" parameterType="com.vo.ApprovalVO">
+        UPDATE FA
+        SET
+        <if test="document_category == '영입'">
+            fa_state = 'TRUE',
+            fa_team = '키움',
+        </if>
+        <if test="document_category == '방출'">
+            fa_state = 'FALSE',
+            fa_team = 'FA',
+            fa_agent = 'null',
+        </if>
+        <if test="document_category == '계약'">
+            fa_sal = #{salary},
+            fa_date = #{contract_term},
+            fa_agent = NULL,
+        </if>
+            fa_ss = 2024
+        WHERE fa_name = #{fa_name}
+    </update>
+
+    <insert id="updateDayoff" parameterType="com.vo.ApprovalVO">
+        INSERT INTO EMP_DAYOFF( DAYOFF_NO, EMP_NO, DAYOFF_STATE, START_DATE, END_DATE, REG_DATE)
+        VALUES (DAYOFF_PK_SEQ.nextval, #{emp_no},
+                <if test="action == '승인'">
+                    '승인'
+                </if>
+                <if test="action == '반려'">
+                    '반려'
+                </if>
+        ,#{start_date}, #{end_date}, TO_CHAR(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul', 'YYYY-MM-DD HH24:MI:SS') )
+    </insert>
+
+    <update id="updateDayoffCnt" parameterType="com.vo.ApprovalVO">
+        UPDATE EMP
+        SET
+            dayoff_cnt = #{dayoff_cnt} -1
+        WHERE emp_no = #{emp_no}
+    </update>
+
+    <select id="stateCnt" parameterType="int" resultType="Map">
+        SELECT
+            states.state,
+            COUNT(document.emp_no) AS count
+        FROM
+            (SELECT '대기' AS state FROM DUAL
+            UNION ALL SELECT '진행' FROM DUAL
+            UNION ALL SELECT '완료' FROM DUAL
+            UNION ALL SELECT '반려' FROM DUAL) states
+            LEFT JOIN
+            document ON document.state = states.state AND document.emp_no = #{emp_no}
+        GROUP BY
+            states.state
+        ORDER BY
+            states.state
+
+    </select>
+
+</mapper>

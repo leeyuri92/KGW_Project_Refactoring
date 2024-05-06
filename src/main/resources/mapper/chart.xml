@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mybatis.mapper.ChartMapper">
+
+    <select id= "hireList" parameterType="map" resultType="map">
+        select  YEAR as HIREYEAR,
+            count(to_char(to_date(HIRE_DATE,'YYYY-MM-DD'),'YYYY')) AS COUNT
+        from EMP RIGHT OUTER JOIN (
+            SELECT TO_CHAR(SYSDATE, 'YYYY' ) - LEVEL + 1 AS YEAR
+            FROM DUAL
+                                                            <![CDATA[ CONNECT BY LEVEL <= (TO_CHAR(SYSDATE,'YYYY')+1)-2015
+            ) ]]>
+        ON TO_CHAR(TO_DATE(HIRE_DATE, 'YYYY-MM-DD'), 'YYYY') = YEAR
+        GROUP BY YEAR
+        ORDER BY YEAR
+    </select>
+
+    <select id= "retireList" parameterType="map" resultType="map">
+        select  YEAR as RETIREYEAR,
+            count(to_char(to_date(RETIRE_DATE,'YYYY-MM-DD'),'YYYY')) AS COUNT
+        from EMP RIGHT OUTER JOIN (
+            SELECT TO_CHAR(SYSDATE, 'YYYY' ) - LEVEL + 1 AS YEAR
+            FROM DUAL
+                                                            <![CDATA[ CONNECT BY LEVEL <= (TO_CHAR(SYSDATE,'YYYY')+1)-2015
+            ) ]]>
+        ON TO_CHAR(TO_DATE(RETIRE_DATE, 'YYYY-MM-DD'), 'YYYY') = YEAR
+        GROUP BY YEAR
+        ORDER BY YEAR
+    </select>
+
+    <select id= "warList" parameterType="map" resultType="map">
+        select FA_NAME, FA_WAR
+        from FA
+        where FA_AGENT='FA자유계약'
+    </select>
+
+    <select id= "positionList" parameterType="map" resultType="map">
+        select FA_POS, count(*) COUNT
+        from FA
+        where FA_AGENT='FA자유계약'
+        group by FA_POS
+    </select>
+
+    <select id= "faList" parameterType="map" resultType="map">
+        select FA_NO, FA_NAME, FA_DATE, FA_TEAM, FA_POS, FA_WAR, FA_STATE, FA_AGENT
+        from FA
+        <where>
+            FA_AGENT='FA자유계약'
+            <if test="gubun!=null">
+                <choose>
+                    <when test='gubun.equals("FA_TEAM")'>
+                        AND FA_TEAM LIKE '%'||#{keyword}||'%'
+                    </when>
+                    <when test='gubun.equals("FA_POS")'>
+                        AND FA_POS LIKE '%'||#{keyword}||'%'
+                    </when>
+                </choose>
+            </if>
+        </where>
+    </select>
+
+    <select id= "kiwoomWar" parameterType="map" resultType="double">
+        select round(avg(FA_WAR),3)
+        from FA
+        where FA_STATE='TRUE'
+    </select>
+
+    <update id="faUpdate" parameterType="java.util.Map">
+        UPDATE FA
+        SET FA_STATE = CASE
+                           WHEN FA_STATE = 'FALSE' THEN 'TRUE'
+                           ELSE 'FALSE'
+            END
+        WHERE FA_NO = #{FA_NO}
+    </update>
+
+    <update id="faInit" parameterType="java.util.Map">
+        UPDATE FA
+        SET FA_STATE = CASE
+                           WHEN FA_TEAM = '키움' THEN 'TRUE'
+                           ELSE 'FALSE'
+            END
+        WHERE FA_AGENT='FA자유계약'
+    </update>
+
+</mapper>

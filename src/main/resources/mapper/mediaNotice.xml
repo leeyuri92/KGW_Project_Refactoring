@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mybatis.mapper.KiwoomNoticeMapper">
+
+    <select id="mediaNoticeList" parameterType="com.vo.MediaNoticeVO" resultType="com.vo.MediaNoticeVO">
+        SELECT
+        mb.board_no,
+        mb.emp_no,
+        mb.board_title,
+        mb.board_hit,
+        mb.reg_date,
+        mb.mod_date,
+        mb.board_content,
+        mb.filename,
+        NVL(cnt.commend_cnt, 0) as commend_cnt,
+        e.name,
+        e.profile_img
+        FROM
+        MEDIA_BOARD mb
+        LEFT JOIN (
+        SELECT
+        BOARD_NO,
+        COUNT(COMMEND_NO) as commend_cnt
+        FROM
+        MEDIA_BOARD_COMMEND
+        GROUP BY
+        BOARD_NO
+        ) cnt ON mb.board_no = cnt.BOARD_NO
+        LEFT JOIN EMP e ON mb.emp_no = e.emp_no
+        <where>
+            <if test="board_no != null">AND mb.board_no=#{board_no}</if>
+            <if test="gubun != null">
+                <choose>
+                    <when test='gubun.equals("board_title")'>
+                        AND mb.board_title LIKE '%'||#{keyword}||'%'
+                    </when>
+                    <when test='gubun.equals("name")'>
+                        AND e.name LIKE '%'||#{keyword}||'%'
+                    </when>
+                </choose>
+            </if>
+        </where>
+        order by reg_date desc
+    </select>
+
+    <delete id="mediaNoticeDelete" parameterType="int">
+        delete from media_board
+        where board_no= #{board_no}
+    </delete>
+
+    <insert id="mediaNoticeInsert" parameterType="com.vo.MediaNoticeVO">
+        insert into media_board(board_no,board_title,board_content,emp_no,reg_date,board_hit,mod_date,filename)
+        values(board_pk_seq.nextval,
+               #{board_title},
+               #{board_content},
+               #{emp_no},
+               to_char(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul','YYYY-MM-DD HH24:MI:SS'),
+               0,
+               to_char(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul','YYYY-MM-DD HH24:MI:SS'),
+               #{filename}
+              )
+    </insert>
+
+    <update id="mediaNoticeModify" parameterType="com.vo.MediaNoticeVO">
+        update media_board
+        set
+            board_title = #{board_title},
+            board_content = #{board_content},
+            mod_date= to_char(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul','YYYY-MM-DD HH24:MI:SS'),
+            filename= #{filename}
+        where board_no = #{board_no}
+    </update>
+
+    <update id="mediaHitUpdate" parameterType="com.vo.MediaNoticeVO">
+        update media_board
+        set board_hit = board_hit+1
+        where board_no = #{board_no}
+    </update>
+
+    <!--댓글 쿼리-->
+    <select id="commendList" parameterType="com.vo.MediaNoticeCommendVO" resultType ="com.vo.MediaNoticeCommendVO">
+        select a.BOARD_NO,
+               a.EMP_NO,
+               a.COMMEND_CONTENT,
+               a.COMMEND_NO,
+               a.REG_DATE,
+               c.NAME,
+               c.PROFILE_IMG
+        from MEDIA_BOARD_COMMEND a inner join MEDIA_BOARD b on a.BOARD_NO = b.BOARD_NO
+                                   inner join emp c on a.emp_no = c.EMP_NO
+        where a.board_no = #{board_no}
+        order by reg_date desc
+    </select>
+
+    <insert id="mediaCommendInsert" parameterType="com.vo.MediaNoticeCommendVO">
+        insert into media_board_commend(commend_no,
+                                        board_no,
+                                        emp_no,
+                                        commend_content,
+                                        reg_date,
+                                        mod_date)
+        values (   COMMEND_PK_SEQ.nextval,
+                   #{board_no},
+                   #{emp_no},
+                   #{commend_content},
+                   to_char(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul','YYYY-MM-DD HH24:MI:SS'),
+                   to_char(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul','YYYY-MM-DD HH24:MI:SS')
+               )
+    </insert>
+
+    <delete id="mediaCommendDelete" parameterType="int">
+        delete from media_board_commend
+        where commend_no= #{commend_no}
+    </delete>
+
+
+</mapper>

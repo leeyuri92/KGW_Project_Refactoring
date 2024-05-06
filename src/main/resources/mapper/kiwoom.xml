@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mybatis.mapper.Kiwoom.Mapper">
+
+
+
+
+    <select id="kiwoomList" parameterType="com.vo.KChartVO" resultType="com.vo.KChartVO">
+        select k_no, k_ss, k_team, k_name, k_num, k_pos, k_birth, K_PHY, k_hire, k_war, k_sal, k_year,k_war
+        from kiwoom
+        <where>
+            <if test="k_no != 0">AND k_no=#{k_no}</if>
+            <if test="gubun!=null">
+                <choose>
+                    <when test='gubun.equals("k_name")'>
+                        AND k_name LIKE '%'||#{keyword}||'%'
+                    </when>
+                    <when test='gubun.equals("k_num")'>
+                        AND k_num LIKE #{keyword}
+                    </when>
+                    <when test='gubun.equals("k_pos")'>
+                        AND k_pos LIKE '%'||#{keyword}||'%'
+                    </when>
+                </choose>
+            </if>
+        </where>
+        order by k_num
+    </select>
+
+
+</mapper>

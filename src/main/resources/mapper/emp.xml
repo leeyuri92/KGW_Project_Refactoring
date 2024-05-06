@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.mybatis.mapper.EmpMapper">
+
+    <select id="empDetail" parameterType="com.vo.EmpVO" resultType="com.vo.EmpVO">
+        select emp_no, team_no,team_name, emp_access, emp_position,  dayoff_cnt, emp_year, hire_date, emp_state, password, name, email, birthdate, phone_num, address, reg_date, mod_date, profile_img
+        from emp natural join team
+        where emp_no = #{emp_no}
+    </select>
+
+    <update id="empDetailUpdate" parameterType="com.vo.EmpVO">
+        update emp
+        set
+          password = #{password}
+          ,email = #{email}
+          ,phone_num = #{phone_num}
+          ,mod_date = to_char(SYSTIMESTAMP AT TIME ZONE 'Asia/Seoul','YYYY-MM-DD HH24:MI:SS')
+          ,address = #{address}
+          ,profile_img = #{profile_img, jdbcType=VARCHAR}
+        where emp_no = #{emp_no}
+    </update>
+
+    <update id="updateYearDayoff_cnt">
+        UPDATE emp e SET
+        DAYOFF_CNT =
+            CASE
+                WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(e.emp_year, 'YYYY-MM-DD'))) &gt; 12 THEN
+                    15 + FLOOR((TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(e.emp_year, 'YYYY-MM-DD'))) - 12) / 12)
+                ELSE
+                    DAYOFF_CNT
+            END,
+        DAYOFF_YN =
+            CASE
+                WHEN TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(e.emp_year, 'YYYY-MM-DD'))) &gt; 12 THEN
+                    1
+                ELSE
+                    DAYOFF_YN
+            END
+    </update>
+
+    <update id="updateMonthDayoff_cnt">
+        UPDATE emp e SET
+        DAYOFF_CNT =
+           CASE
+               WHEN DAYOFF_YN = 0  THEN
+                   DAYOFF_CNT + 1
+               ELSE
+                   DAYOFF_CNT
+               END
+    </update>
+</mapper>

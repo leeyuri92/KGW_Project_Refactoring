@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgw.ticket.dao.CalendarDao">
+
+    <select id= "cList" parameterType="map" resultType="com.vo.CalendarVO">
+        select * from calendar a
+        INNER JOIN emp b ON a.emp_no = b.emp_no
+        <where>
+            AND a.emp_no = b.emp_no
+            AND a.calendar_id = 1
+
+            <if test="gubun != null">
+                <choose>
+                    <when test='gubun.equals("calendar_title")'>
+                        AND calendar_title LIKE '%'||#{keyword}||'%'
+                    </when>
+                    <when test='gubun.equals("calendar_start")'>
+                        AND calendar_start LIKE '%'||#{keyword}||'%'
+                    </when>
+                    <when test='gubun.equals("calendar_end")'>
+                        AND calendar_end LIKE '%'||#{keyword}||'%'
+                    </when>
+                    <when test='gubun.equals("name")'>
+                        AND name LIKE '%'||#{keyword}||'%'
+                    </when>
+                </choose>
+            </if>
+        </where>
+    </select>
+
+    <select id= "tList" parameterType="map" resultType="com.vo.CalendarVO">
+        select * from calendar a
+        INNER JOIN emp b ON a.emp_no = b.emp_no
+        <where>
+            AND a.emp_no = b.emp_no
+            AND a.calendar_id = 2
+
+            <if test="gubun != null">
+                <choose>
+                    <when test='gubun.equals("calendar_title")'>
+                        AND calendar_title LIKE '%'||#{keyword}||'%'
+                    </when>
+                    <when test='gubun.equals("calendar_start")'>
+                        AND calendar_start LIKE '%'||#{keyword}||'%'
+                    </when>
+                    <when test='gubun.equals("calendar_end")'>
+                        AND calendar_end LIKE '%'||#{keyword}||'%'
+                    </when>
+                    <when test='gubun.equals("name")'>
+                        AND name LIKE '%'||#{keyword}||'%'
+                    </when>
+                </choose>
+            </if>
+        </where>
+    </select>
+
+    <select id= "cpList" parameterType="map" resultType="com.vo.CalendarVO">
+        select * from calendar a
+        INNER JOIN emp b ON a.emp_no = b.emp_no
+        <where>
+            AND a.emp_no = b.emp_no
+            AND a.calendar_id = 3
+
+            <if test="gubun != null">
+                <choose>
+                    <when test='gubun.equals("calendar_title")'>
+                        AND calendar_title LIKE '%'||#{keyword}||'%'
+                    </when>
+                    <when test='gubun.equals("calendar_start")'>
+                        AND calendar_start LIKE '%'||#{keyword}||'%'
+                    </when>
+                    <when test='gubun.equals("calendar_end")'>
+                        AND calendar_end LIKE '%'||#{keyword}||'%'
+                    </when>
+                    <when test='gubun.equals("name")'>
+                        AND name LIKE '%'||#{keyword}||'%'
+                    </when>
+                </choose>
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteCalendar" parameterType="int">
+        DELETE FROM calendar
+        WHERE calendar_no = #{calendar_no}
+    </delete>
+
+
+    <insert id="insertCalendar" parameterType="com.vo.CalendarVO">
+        INSERT INTO CALENDAR (CALENDAR_NO, EMP_NO, CALENDAR_ID, CALENDAR_TITLE, CALENDAR_CONTENT, CALENDAR_START, CALENDAR_END, REG_DATE, MOD_DATE)
+        VALUES (calendar_pk_seq.nextval, '${emp_no}', '${calendar_id}', '${calendar_title}', '일정', '${calendar_start}', '${calendar_end}', to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'), to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'))
+    </insert>
+
+    <update id="updateCalendar" parameterType="com.vo.CalendarVO">
+        UPDATE calendar
+        SET calendar_no = '${calendar_no}',
+            calendar_title = '${calendar_title}',
+            emp_no = '${emp_no}',
+            calendar_id = '${calendar_id}',
+            calendar_content = '예약',
+            calendar_start = '${calendar_start}',
+            calendar_end = '${calendar_end}'
+        where calendar_no = '${calendar_no}'
+    </update>
+
+    <delete id="deleteTodayCalendar" parameterType="int">
+        DELETE FROM calendar
+        WHERE calendar_no = #{calendar_no}
+    </delete>
+
+    <select id="cdList" parameterType="map" resultType="map">
+        SELECT
+        *
+        FROM calendar
+    </select>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

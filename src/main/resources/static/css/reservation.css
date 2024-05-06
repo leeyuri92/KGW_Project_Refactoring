@@ -1,0 +1,209 @@
+/* **********************<< 공통 CSS >>*********************** */
+.container-fluid {
+    display: flex;
+    justify-content: space-between; /* 요소를 컨테이너 양쪽 정렬 */
+    align-items: center; /* 요소를 수직 가운데 정렬 */
+    margin: 10px;
+}
+
+.container-fluid1 {
+    display: flex;
+    justify-content: space-between; /* 요소를 컨테이너 양쪽 정렬 */
+    align-items: center; /* 요소를 수직 가운데 정렬 */
+    margin: 30px 15px 10px 10px;
+}
+
+.cal_title{
+    font-weight: bold;
+    margin-left: 1.5rem;
+}
+
+.search{
+    width: 35% !important;
+}
+
+.form-control,
+.btn {
+    flex: 1; /* 폼 컨트롤과 버튼 확장하여 가능한 공간채움 */
+    min-width: 0; /* 최소 너비를 0으로 설정 컨테이너 크기에 따라 조절 */
+}
+
+.cancel-button {
+    border-radius: 3px;
+}
+
+#submitEvent,
+#exitEvent,
+#searchEvent,
+#exitEvent2,
+#addEvent,
+#deleteEvent,
+#updateEvent,
+#cancel-button,
+#close{
+    font-family: Roboto !important;
+    background-color: #7c1512 !important;
+    color: white; !important;
+    font-size: small !important;
+    cursor: pointer; !important;
+    border-radius: 3px;!important;
+    padding: 0.5rem; !important;
+    border: none;!important;
+    font-weight: bold;!important;
+}
+
+.btn-primary{
+    border-color: black !important;
+}
+
+.mainbox {
+    position: relative;
+    border-radius: 3px;
+    background: #ffffff;
+    /*border-top: 4px solid #d2d6de;*/
+    margin-top: 10px;
+    margin-bottom: 20px;
+    margin: 0 5px 20px 5px;
+    width: calc(100% - 10px);
+    box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.1), inset 2px 2px 2px 2px rgba(0, 0, 0, 0.1);
+    /*padding: 1rem 2rem 5px 2rem;*/
+
+}
+
+.mainbox-header {
+    padding: 20px 0px;
+}
+
+/* 모달 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000; /* 요소들의 젤 위에 표시 */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 200px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 27px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* 헤더툴바 마진 */
+.fc-header-toolbar {
+    margin: 0px 20px 0px 20px;
+}
+
+.fc-event-title {
+    color: black; !important;
+    font-weight: bold;
+}
+
+/* 헤더툴바 버튼 색상 */
+.fc-toolbar .fc-resourceTimelineMonth-button,
+.fc-toolbar .fc-resourceTimelineWeek-button,
+.fc-toolbar .fc-resourceTimelineDay-button,
+.fc-toolbar .fc-dayGridMonth-button,
+.fc-toolbar .fc-timeGridWeek-button,
+.fc-toolbar .fc-timeGridDay-button,
+.fc-toolbar .fc-listWeek-button,
+.fc-toolbar .fc-prev-button,
+.fc-toolbar .fc-next-button,
+.fc-toolbar .fc-today-button {
+    background-color: #7c1512 !important;
+    border: #7c1512 1px solid; !important;
+    font-weight: bold;!important;
+}
+
+element.style {
+    background-color: #7c1512; !important;
+}
+
+/* **********************<< 예약 CSS >>*********************** */
+#calendar1 {
+    max-width: 100%;
+    margin: 30px auto 30px auto;
+}
+
+.table{
+    margin-top: 10px;
+}
+
+.table th,
+.table td {
+    text-align: center; /* 수평 가운데 정렬 */
+    vertical-align: middle; /* 수직 가운데 정렬 */
+}
+
+.table th:first-child {
+    margin-left: 10px;
+}
+
+.table th:last-child{
+    text-align: right;
+    padding-inline-end: 32px;/* 텍스트를 오른쪽으로 정렬합니다. */
+}
+
+.table td:last-child{
+    padding-inline-end: 22px;
+    text-align: right;
+}
+
+.checkbox-container {
+    display: flex; /* 요소 행 나열 */
+    justify-content: flex-end; /* 요소 오른쪽 정렬 */
+    align-items: center; /* 요소 세로 방향 가운데 정렬 */
+}
+
+.checkbox-container div {
+    margin-right: 10px; /* 체크박스와 라벨 사이 간격을 조절 */
+}
+
+/* 예약 정보 타이틀 */
+.reservation-status{
+    margin-top: 40px;
+    font-size: large; /* 글자 크기 */
+    font-family: "맑은 고딕";
+}
+
+/* 라이선스 메세지 없애기 */
+.fc-license-message{
+    z-index: -1 !important;
+    visibility: hidden !important;
+}
+
+/* 타임라인 글씨 속성 */
+a {
+    color: black;
+    text-decoration: none;
+}
+
+/* 타임라인 리소스 왼쪽정렬 */
+th:last-child, td:last-child {
+    text-align: left;
+}

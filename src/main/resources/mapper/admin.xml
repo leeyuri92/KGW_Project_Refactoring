@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mybatis.mapper.adminMapper">
+
+    <update id="empInfoUpdate" parameterType="com.vo.EmpVO">
+        update emp
+        set team_no = #{team_no}
+          ,emp_access = #{emp_access}
+          ,emp_position = #{emp_position}
+          ,dayoff_cnt = #{dayoff_cnt}
+          ,emp_year = #{hire_date}
+          ,hire_date = #{hire_date}
+          ,emp_state = #{emp_state}
+          ,password = #{password}
+          ,name = #{name}
+          ,email = #{email}
+          ,birthdate = #{birthdate}
+          ,phone_num = #{phone_num}
+          ,mod_date = to_char(sysdate,'YYYY-MM-DD HH24:MI:SS')
+          ,address = #{address}
+          ,retire_date = #{retire_date}
+          ,profile_img = #{profile_img , jdbcType=VARCHAR}
+        where emp_no = #{emp_no}
+    </update>
+
+    <insert id="regist" parameterType="com.vo.EmpVO">
+        insert into emp(emp_no,team_no,emp_access,emp_position,dayoff_yn,dayoff_cnt,hire_date,emp_state,password,name,email,birthdate,phone_num,address,mod_date,reg_date,retire_date, emp_year)
+        values(emp_pk_seq.nextval,#{team_no},#{emp_access},#{emp_position},0,0,#{hire_date},#{emp_state},#{password},#{name},#{email},#{birthdate},#{phone_num},#{address},to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),to_char(sysdate,'YYYY-MM-DD'),NULL,
+               #{hire_date})
+    </insert>
+
+    <select id="empList" parameterType="com.vo.EmpVO" resultType="com.vo.EmpVO">
+        select e.emp_no,t.team_name,e.team_no, e.emp_access, e.emp_position, e.dayoff_yn, e.dayoff_cnt, e.emp_year,e.hire_date, e.emp_state, e.reg_date, e.mod_date, e.password, e.name, e.email,e.phone_num,e.address,e.birthdate,e.retire_date,e.profile_img
+        from emp e JOIN team t ON e.team_no = t.team_no
+        <where>
+            <if test="emp_no != null and emp_no != 0">AND e.emp_no=#{emp_no}</if>
+            <if test="gubun!=null">
+                <choose>
+                    <when test='gubun.equals("name")'>
+                        AND e.name LIKE '%'||#{keyword}||'%'
+                    </when>
+                    <when test='gubun.equals("emp_no")'>A
+                        AND e.emp_no LIKE '%'||#{keyword}||'%'
+                    </when>
+                    <when test='gubun.equals("team_name")'>
+                        AND t.team_name LIKE '%'||#{keyword}||'%'
+                    </when>
+                </choose>
+            </if>
+        </where>
+        order by e.emp_no desc
+    </select>
+
+
+
+
+
+</mapper>

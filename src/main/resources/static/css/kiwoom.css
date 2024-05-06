@@ -1,0 +1,9 @@
+@charset "UTF-8";
+.card {
+    /*max-width: 290px;*/
+    height: 180px;
+}
+.responsive-image {
+    max-width: 100%;
+    height: auto;
+}
