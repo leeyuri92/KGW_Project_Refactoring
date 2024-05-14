@@ -121,6 +121,7 @@
             });
         }
 
+        // 2024.05.14 리팩토링_이메일 전송 알림창
         const sendEmail = (email) => {
             console.log('sendEmail 실행');
             Swal.fire({
