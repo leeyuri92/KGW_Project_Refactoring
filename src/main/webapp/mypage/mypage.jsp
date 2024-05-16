@@ -20,6 +20,24 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
   <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+  <style>
+    .modal-body input {
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    .modal-body input:focus {
+      border-color: #b02a37;
+      outline: 0;
+      box-shadow: 0 0 0 0.25rem rgba(176, 42, 55, 0.73);
+    }
+
+    .modal-body button {
+      border: none;
+    }
+  </style>
   <script type="text/javascript">
 
       // 직원 정보 수정 함수
@@ -65,6 +83,10 @@
               reader.readAsDataURL(input.files[0]);
           }
       }
+
+      const updatePW = () => {
+
+      };
 
   </script>
 
@@ -143,9 +165,8 @@
                 <input type="text" class="form-control" id="name" name="name" onblur="validateName()" value="<%=empDetail.getName()%>" disabled>
               </div>
               <div class="col-6 mb-3 mt-3">
-                <label for="password">비밀번호 <span class="text-danger">*</span>
-                  <span id="password_" class="text-danger" style="display:none"> 대소문자와 숫자 4~12자리로 입력하세요.</span></label>
-                <input type="password" class="form-control" id="password" name="password"  onblur="validatePassword()" value="<%=empDetail.getPassword()%>">
+                <label for="password">비밀번호 <span class="text-danger">*</span></label>
+                <button type="button" class="btn btn-primary form-control" id="password" name="password" data-bs-toggle="modal" data-bs-target="#updatePW">비밀번호 찾기</button>
               </div>
             </div>
 
@@ -265,6 +286,32 @@
       </div>
     </div>
   </div>
+  <!-- ========================== [[ updatePW Modal Start ]] ========================== -->
+  <div class="modal" id="updatePW">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content rounded-4 shadow">
+        <div class="modal-header p-5 border-bottom-0">
+          <h1 class="fw-bold mb-0 fs-2">비밀번호 변경</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-5 pt-0">
+          <form id="m_updatePW" method="post" action="/updatePW">
+            <div class="form-floating mb-3">
+              <input type="password" class="form-control rounded-3" id="currentPW" name="currentPW"  placeholder="">
+              <label for="currentPW">기존 비밀번호 입력 </label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="password" class="form-control rounded-3" id="newPW" name="newPW" onblur="validatePassword()" placeholder="">
+              <label for="newPW">새로운 비밀번호 입력</label>
+              <span id="password_" class="text-danger mt-2" style="display:none"> 대소문자와 숫자 4~12자리로 입력하세요.</span>
+            </div>
+            <button type="button" class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" style="background-color: #652C2C;"  onclick="updatePW()">변경 완료</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ========================== [[ updatePW Modal End ]] ========================== -->
   <script>
       const openZipcode = () => {
           new daum.Postcode({//Postcode객체 생성하기  - 생성하자마자 내부에 구현하기가 전기해고있다
@@ -449,5 +496,6 @@
       </div>
     </div>
   </div>
+
 </body>
 </html>
