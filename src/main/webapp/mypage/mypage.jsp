@@ -293,7 +293,7 @@
         <div class="modal-header p-5 border-bottom-0">
           <h1 class="fw-bold mb-0 fs-2">비밀번호 변경</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div> 
+        </div>  
         <div class="modal-body p-5 pt-0">
           <form id="m_updatePW" method="post" action="/updatePW">
             <div class="form-floating mb-3">
