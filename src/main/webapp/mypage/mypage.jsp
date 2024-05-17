@@ -286,24 +286,27 @@
       </div>
     </div>
   </div>
+
   <!-- ========================== [[ updatePW Modal Start ]] ========================== -->
   <div class="modal" id="updatePW">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content rounded-4 shadow">
-        <div class="modal-header p-5 border-bottom-0">
+        <div class="modal-header pt-5 pl-5 pr-5 pb-0 border-bottom-0">
           <h1 class="fw-bold mb-0 fs-2">비밀번호 변경</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>  
+        </div>
         <div class="modal-body p-5 pt-0">
           <form id="m_updatePW" method="post" action="/updatePW">
             <div class="form-floating mb-3">
-              <input type="password" class="form-control rounded-3" id="currentPW" name="currentPW"  placeholder="">
-              <label for="currentPW">기존 비밀번호 입력 </label>
+              <input type="password" class="form-control rounded-3" id="newPW" name="newPW"  onblur="validatePassword()" placeholder="">
+              <label for="newPW">새 비밀번호</label>
+              <span id="password_" class="text-danger mt-2" style="display:none"> 대소문자와 숫자 4~12자리로 입력하세요.</span>
             </div>
             <div class="form-floating mb-3">
-              <input type="password" class="form-control rounded-3" id="newPW" name="newPW" onblur="validatePassword()" placeholder="">
-              <label for="newPW">새로운 비밀번호 입력</label>
-              <span id="password_" class="text-danger mt-2" style="display:none"> 대소문자와 숫자 4~12자리로 입력하세요.</span>
+              <input type="password" class="form-control rounded-3" id="rePW" name="rePW" onblur="isEqualPassword()" placeholder="">
+              <label for="rePW">새 비밀번호 확인</label>
+              <span id="rePassword_" class="text-danger mt-2" style="display:none"> 다시 한 번 확인해주세요.</span>
+
             </div>
             <button type="button" class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" style="background-color: #652C2C;"  onclick="updatePW()">변경 완료</button>
           </form>
@@ -312,6 +315,7 @@
     </div>
   </div>
   <!-- ========================== [[ updatePW Modal End ]] ========================== -->
+
   <script>
       const openZipcode = () => {
           new daum.Postcode({//Postcode객체 생성하기  - 생성하자마자 내부에 구현하기가 전기해고있다
@@ -355,9 +359,21 @@
         return isPasswordValid &&  isPhoneValid && isEmailValid && isAddressValid;
       }
 
+      const isEqualPassword = () => {
+        const pwSpan = document.getElementById('newPW');
+        const rePW = document.getElementById('rePW');
+        const repwSpan = document.getElementById('rePassword_');
+
+        if (pwSpan === rePW) {
+          repwSpan.style.display = 'none';
+        } else {
+          repwSpan.style.display = 'inline';
+        }
+      };
+
       const validatePassword = () => {
           const pwSpan = document.getElementById('password_');
-          const mbrPwInput = document.getElementById('password');
+          const mbrPwInput = document.getElementById('newPW');
           const isValid = expPwText.test(mbrPwInput.value);
 
           if (isValid) {
@@ -496,6 +512,7 @@
       </div>
     </div>
   </div>
+
 
 </body>
 </html>
