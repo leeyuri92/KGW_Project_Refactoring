@@ -328,6 +328,41 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon bi bi-bag-heart-fill"></i>
+                            <p>
+                                KGW 복지몰
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="/mallWelfare/shoppingMall.jsp" class="nav-link">
+                                    <i class="bi bi-record nav-icon"></i>
+                                    <p>쇼핑몰</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/mallWelfare/shoppingBasket.jsp" class="nav-link">
+                                    <i class="bi bi-record nav-icon"></i>
+                                    <p>장바구니</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/mallWelfare/order_deli.jsp" class="nav-link">
+                                    <i class="bi bi-record nav-icon"></i>
+                                    <p>주문/배송</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/mallWelfare/csCenter.jsp" class="nav-link">
+                                    <i class="bi bi-record nav-icon"></i>
+                                    <p>고객센터</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                     <%
                         if(sessionVO.getEmp_access().equals("ROLE_ADMIN") || sessionVO.getEmp_access().equals("ROLE_MASTER" )){
                     %>
