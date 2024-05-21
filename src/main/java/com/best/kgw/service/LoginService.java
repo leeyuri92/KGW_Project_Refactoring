@@ -1,5 +1,7 @@
 package com.best.kgw.service;
 
+import com.vo.EmpVO;
+
 import java.util.Map;
 /**********************************************************************************
  작성자 : 이유리
@@ -11,4 +13,7 @@ public interface LoginService {
     public String findId(Map<String, Object> fmap) throws Exception;
 
     String findPw(String emp_no) throws Exception;
+
+    int updatePW(EmpVO empVO);
+
 }

@@ -3,9 +3,11 @@ package com.best.kgw.service.impl;
 
 import com.best.kgw.dao.LoginDao;
 import com.best.kgw.service.LoginService;
+import com.vo.EmpVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -17,6 +19,9 @@ public class LoginServiceImpl implements LoginService {
 
   @Autowired
   private LoginDao loginDao;
+
+  @Autowired
+  private BCryptPasswordEncoder bCryptPasswordEncoder;
 
   /**********************************************************************************
    작성자 : 이유리
@@ -42,5 +47,17 @@ public class LoginServiceImpl implements LoginService {
     String email = loginDao.findPw(emp_no);
     logger.info("email  : " + email);
     return email;
+  }
+
+  @Override
+  public int updatePW(EmpVO empVO) {
+    logger.info("updatePW");
+    // 비밀번호 암호화
+    String rowNum = empVO.getPassword();;
+    String encNum =bCryptPasswordEncoder.encode(rowNum);
+    empVO.setPassword(encNum);
+    int result = loginDao.updatePW(empVO);
+    logger.info("result : " + result);
+    return result;
   }
 }

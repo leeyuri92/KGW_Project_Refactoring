@@ -33,4 +33,9 @@
         WHERE EMAIL = #{to}
     </update>
 
+    <update id="updatePW" parameterType="com.vo.EmpVO">
+        UPDATE EMP
+        SET password = #{password}
+        WHERE emp_no = #{emp_no}
+    </update>
 </mapper>

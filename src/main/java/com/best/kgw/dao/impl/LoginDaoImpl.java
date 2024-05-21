@@ -78,4 +78,12 @@ public class LoginDaoImpl implements LoginDao {
     logger.info("result : " + result);
     return result;
   }
+
+  @Override
+  public int updatePW(EmpVO empVO) {
+    logger.info("updatePW");
+    int result = sqlSessionTemplate.update("updatePW", empVO);
+    logger.info("result : " + result);
+    return result;
+  }
 } 

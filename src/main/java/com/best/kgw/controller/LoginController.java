@@ -1,6 +1,7 @@
 package com.best.kgw.controller;
 
 import com.best.kgw.service.LoginService;
+import com.vo.EmpVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,26 @@ public class LoginController {
       String email = loginService.findPw(emp_no);
       logger.info("email : "+email);
       return email;
+    }
+    catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  /**********************************************************************************
+   작성자 : 이유리
+   작성일자 : 24.05.21
+   기능 : 비밀번호변경 구현
+   **********************************************************************************/
+  @PostMapping("/updatePW")
+  @ResponseBody
+  public int updatePW(EmpVO empVO) {
+    logger.info("updatePW");
+
+    try {
+      int result = loginService.updatePW(empVO);
+      logger.info("result : "+result);
+      return result;
     }
     catch (Exception e) {
       throw new RuntimeException(e);

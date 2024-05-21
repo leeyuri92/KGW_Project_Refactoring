@@ -85,8 +85,48 @@
       }
 
       const updatePW = () => {
-
-      };
+        if (validatePassword() && equalPassword()) {
+          console.log('updatePW 클릭')
+          $.ajax({
+            type: "POST",
+            url: "updatePW",
+            data: {
+              password: $('#newPW').val(),
+              emp_no: $('#emp_no').val()
+            },
+            success: function (data) {
+              console.log("받아온 data 값 : " + data);
+              if (data != "") {
+                Swal.fire({
+                  title: '비밀번호 변경에 성공하였습니다.',
+                  icon: 'success',
+                  confirmButtonColor: '#800000',
+                  customClass: {
+                    popup: 'swal2-small'
+                  }
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    // 확인 버튼을 클릭한 경우 다음 화면으로 이동
+                    window.location.href = '/mypage?emp_no=' + <%=empDetail.getEmp_no()%>;
+                  }
+                })
+              } else {
+                Swal.fire({
+                  title: '비밀번호 변경에 실패하였습니다.',
+                  icon: 'warning',
+                  confirmButtonColor: '#800000',
+                  customClass: {
+                    popup: 'swal2-small'
+                  }
+                })
+              }
+            }
+          })
+        } else {
+          // 유효성 검사 실패 시, SweetAlert를 사용하여 오류 메시지 표시
+          Swal.fire("오류!", "비밀번호 양식을 올바르게 입력해주세요.", "error");
+        }
+      }
 
   </script>
 
@@ -166,7 +206,7 @@
               </div>
               <div class="col-6 mb-3 mt-3">
                 <label for="password">비밀번호 <span class="text-danger">*</span></label>
-                <button type="button" class="btn btn-primary form-control" id="password" name="password" data-bs-toggle="modal" data-bs-target="#updatePW">비밀번호 찾기</button>
+                <button type="button" class="btn btn-primary form-control" id="password" name="password" data-bs-toggle="modal" data-bs-target="#updatePW">비밀번호 변경</button>
               </div>
             </div>
 
@@ -303,7 +343,7 @@
               <span id="password_" class="text-danger mt-2" style="display:none"> 대소문자와 숫자 4~12자리로 입력하세요.</span>
             </div>
             <div class="form-floating mb-3">
-              <input type="password" class="form-control rounded-3" id="rePW" name="rePW" onblur="isEqualPassword()" placeholder="">
+              <input type="password" class="form-control rounded-3" id="rePW" name="rePW" onblur="equalPassword()" placeholder="">
               <label for="rePW">새 비밀번호 확인</label>
               <span id="rePassword_" class="text-danger mt-2" style="display:none"> 다시 한 번 확인해주세요.</span>
 
@@ -350,25 +390,26 @@
       // 각 입력 필드의 유효성을 검사하는 함수
       const validateForm = () => {
         // 각 입력 필드에 대한 유효성 검사 함수 호출
-        const isPasswordValid = validatePassword();
         const isPhoneValid = validatePhone();
         const isEmailValid = validateEmail();
         const isAddressValid = validateAddress();
 
         // 모든 검사가 통과되면 true를 반환하고, 그렇지 않으면 false를 반환합니다.
-        return isPasswordValid &&  isPhoneValid && isEmailValid && isAddressValid;
+        return isPhoneValid && isEmailValid && isAddressValid;
       }
 
-      const isEqualPassword = () => {
-        const pwSpan = document.getElementById('newPW');
+      const equalPassword = () => {
+        const newPW = document.getElementById('newPW');
         const rePW = document.getElementById('rePW');
         const repwSpan = document.getElementById('rePassword_');
+        const isEqual = newPW.value === rePW.value;
 
-        if (pwSpan === rePW) {
+        if (isEqual) {
           repwSpan.style.display = 'none';
         } else {
           repwSpan.style.display = 'inline';
         }
+        return isEqual;
       };
 
       const validatePassword = () => {
