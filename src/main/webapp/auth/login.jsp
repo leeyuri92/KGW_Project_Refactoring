@@ -62,6 +62,13 @@
             })
         }
 
+        // 모달창 클릭 시 입력값 초기화
+        const modalClick = () => {
+            $('form').each(function (){
+                this.reset();
+            });
+        };
+
         const findId = () => {
             $.ajax({
                 type: "POST",
@@ -80,6 +87,11 @@
                             customClass: {
                                 popup: 'swal2-small'
                             }
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $('.modal').modal('hide');
+
+                            }
                         })
                     } else {
                         Swal.fire({
@@ -97,16 +109,18 @@
 
         const findPw = () => {
             console.log('findPw 클릭')
+            const emp_no = $('#floatingPW_id').val();
+
             $.ajax({
                 type: "POST",
                 url: "findPw",
                 data: {
-                    emp_no: $('#floatingPW_id').val()
+                    emp_no: emp_no
                 },
                 success: function (data) {
                     console.log("받아온 data 값 : " + data);
                     if (data != "") {
-                        sendEmail(data);
+                        sendEmail(data, emp_no);
                     } else {
                         Swal.fire({
                             title: '일치하는 정보가 없습니다.',
@@ -122,7 +136,7 @@
         }
 
         // 2024.05.14 리팩토링_이메일 전송 알림창
-        const sendEmail = (email) => {
+        const sendEmail = (email, emp_no) => {
             console.log('sendEmail 실행');
             Swal.fire({
                 title: '이메일로 임시비밀번호를 보내드렸습니다.',
@@ -131,11 +145,18 @@
                 customClass:{
                     popup : 'swal2-small'
                 }
+            }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('.modal').modal('hide');
+                    }
             })
             $.ajax({
                 type: "POST",
                 url: "sendPassword",
-                data: {email: email},
+                data: {
+                    email: email,
+                    emp_no : emp_no
+                },
                 success: function (resource) {
                     console.log("성공여부 : " + resource);
                 }
@@ -163,7 +184,7 @@
             </div>
             <button type="button" class="btn btn-sm btn-outline-dark" onclick="login()">LOGIN</button>
             <div class="d-flex justify-content-between mt-2 gap-2" >
-                <button type="button" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#findID">사원번호찾기</button>
+                <button type="button" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#findID" onclick="modalClick()">사원번호찾기</button>
                 <button type="button" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#findPW">비밀번호찾기</button>
             </div>
         </form>
@@ -208,7 +229,7 @@
             <div class="modal-body p-5 pt-0">
                 <form id="f_findPw" method="post" action="">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control rounded-3" id="floatingPW_id" name="emp" placeholder="ID">
+                        <input type="text" class="form-control rounded-3" id="floatingPW_id" name="emp_no" placeholder="ID">
                         <label for="floatingPW_id">사원번호 입력</label>
                     </div>
                     <button type="button" class="w-100 mb-2 btn btn-lg rounded-3 btn-primary"  style="background-color: #652C2C;" onclick="findPw()">찾기</button>

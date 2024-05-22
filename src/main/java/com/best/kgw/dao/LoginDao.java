@@ -13,7 +13,5 @@ public interface LoginDao {
 
   String findPw(String emp_no) throws Exception;
 
-  int updatePw(EmailMessage emailMessage) throws Exception;
-
   int updatePW(EmpVO empVO);
 }

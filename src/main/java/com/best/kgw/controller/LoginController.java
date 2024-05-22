@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Map;
 
@@ -44,7 +45,7 @@ public class LoginController {
 
     try {
       String id = loginService.findId(fmap);
-      logger.info("id : "+id);
+      logger.info("id : " + id);
       return id;
     }
     catch (Exception e) {
@@ -65,7 +66,7 @@ public class LoginController {
 
     try {
       String email = loginService.findPw(emp_no);
-      logger.info("email : "+email);
+      logger.info("email : " + email);
       return email;
     }
     catch (Exception e) {
@@ -92,6 +93,21 @@ public class LoginController {
       throw new RuntimeException(e);
     }
   }
+
+//  @PostMapping("/updatePW")
+//  public String updatePW(EmpVO empVO, RedirectAttributes redirectAttributes) {
+//    logger.info("updatePW");
+//
+//    try {
+//      int result = loginService.updatePW(empVO);
+//      logger.info("result : " + result);
+//      redirectAttributes.addAttribute("emp_no", empVO.getEmp_no());
+//      return "redirect:./mypage";
+//    }
+//    catch (Exception e) {
+//      throw new RuntimeException(e);
+//    }
+//  }
 
   /**********************************************************************************
    작성자 : 이유리

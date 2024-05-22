@@ -17,9 +17,6 @@ public class LoginDaoImpl implements LoginDao {
   Logger logger = LoggerFactory.getLogger(LoginDaoImpl.class);
 
   @Autowired
-  private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-  @Autowired
   private SqlSessionTemplate sqlSessionTemplate ;
 
   /**********************************************************************************
@@ -65,18 +62,6 @@ public class LoginDaoImpl implements LoginDao {
     String email = sqlSessionTemplate.selectOne("emp_no", emp_no);
     logger.info("찾은 email 값 : " + email);
     return email;
-  }
-
-  @Override
-  public int updatePw(EmailMessage emailMessage) throws Exception {
-    logger.info("updatePw");
-    // 임시비밀번호 암호화
-    String rowNum = emailMessage.getEncPW();
-    String encNum =bCryptPasswordEncoder.encode(rowNum);
-    emailMessage.setEncPW(encNum);
-    int result = sqlSessionTemplate.update("updatePw", emailMessage);
-    logger.info("result : " + result);
-    return result;
   }
 
   @Override

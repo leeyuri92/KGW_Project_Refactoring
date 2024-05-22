@@ -27,12 +27,6 @@
         WHERE  emp_no = #{emp_no}
     </select>
 
-    <update id="updatePw" parameterType="com.best.kgw.auth.EmailMessage">
-        UPDATE EMP
-        SET password = #{encPW}
-        WHERE EMAIL = #{to}
-    </update>
-
     <update id="updatePW" parameterType="com.vo.EmpVO">
         UPDATE EMP
         SET password = #{password}

@@ -3,6 +3,8 @@ package com.best.kgw.service.impl;
 import com.best.kgw.auth.EmailMessage;
 import com.best.kgw.dao.LoginDao;
 import com.best.kgw.service.EmailService;
+import com.best.kgw.service.LoginService;
+import com.vo.EmpVO;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Autowired
     private LoginDao loginDao;
+
 
     /**********************************************************************************
      작성자 : 이유리
@@ -55,8 +58,6 @@ public class EmailServiceImpl implements EmailService {
             javaMailSender.send(mimeMessage);
 
             logger.info("Success");
-
-            loginDao.updatePw(emailMessage);
 
             return authNum;
 

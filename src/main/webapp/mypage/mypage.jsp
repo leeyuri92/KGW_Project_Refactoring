@@ -85,6 +85,18 @@
       }
 
       const updatePW = () => {
+        // if (validatePassword() && equalPassword()) {
+        //   // 유효성 검사 성공 시, SweetAlert를 사용하여 성공 메시지 표시 후 폼 제출
+        //   Swal.fire("비밀번호 변경 완료!", "", "success")
+        //           .then((result) => {
+        //             if (result.isConfirmed || result.isDismissed) {
+        //               document.querySelector("#m_updatePW").submit();
+        //             }
+        //           });
+        // } else {
+        //   // 유효성 검사 실패 시, SweetAlert를 사용하여 오류 메시지 표시
+        //   Swal.fire("오류!", "비밀번호 양식을 올바르게 입력해주세요.", "error");
+        // }
         if (validatePassword() && equalPassword()) {
           console.log('updatePW 클릭')
           $.ajax({
@@ -104,12 +116,8 @@
                   customClass: {
                     popup: 'swal2-small'
                   }
-                }).then((result) => {
-                  if (result.isConfirmed) {
-                    // 확인 버튼을 클릭한 경우 다음 화면으로 이동
-                    window.location.href = '/mypage?emp_no=' + <%=empDetail.getEmp_no()%>;
-                  }
                 })
+                $('.modal').modal('hide');
               } else {
                 Swal.fire({
                   title: '비밀번호 변경에 실패하였습니다.',
@@ -127,7 +135,6 @@
           Swal.fire("오류!", "비밀번호 양식을 올바르게 입력해주세요.", "error");
         }
       }
-
   </script>
 
 </head>
@@ -337,13 +344,14 @@
         </div>
         <div class="modal-body p-5 pt-0">
           <form id="m_updatePW" method="post" action="/updatePW">
+            <input type="hidden" name="emp_no" value="<%=empDetail.getEmp_no()%>">
             <div class="form-floating mb-3">
-              <input type="password" class="form-control rounded-3" id="newPW" name="newPW"  onblur="validatePassword()" placeholder="">
+              <input type="password" class="form-control rounded-3" id="newPW" name="password" onblur="validatePassword()" placeholder="">
               <label for="newPW">새 비밀번호</label>
               <span id="password_" class="text-danger mt-2" style="display:none"> 대소문자와 숫자 4~12자리로 입력하세요.</span>
             </div>
             <div class="form-floating mb-3">
-              <input type="password" class="form-control rounded-3" id="rePW" name="rePW" onblur="equalPassword()" placeholder="">
+              <input type="password" class="form-control rounded-3" id="rePW" onblur="equalPassword()" placeholder="">
               <label for="rePW">새 비밀번호 확인</label>
               <span id="rePassword_" class="text-danger mt-2" style="display:none"> 다시 한 번 확인해주세요.</span>
 
@@ -398,20 +406,6 @@
         return isPhoneValid && isEmailValid && isAddressValid;
       }
 
-      const equalPassword = () => {
-        const newPW = document.getElementById('newPW');
-        const rePW = document.getElementById('rePW');
-        const repwSpan = document.getElementById('rePassword_');
-        const isEqual = newPW.value === rePW.value;
-
-        if (isEqual) {
-          repwSpan.style.display = 'none';
-        } else {
-          repwSpan.style.display = 'inline';
-        }
-        return isEqual;
-      };
-
       const validatePassword = () => {
           const pwSpan = document.getElementById('password_');
           const mbrPwInput = document.getElementById('newPW');
@@ -423,6 +417,20 @@
               pwSpan.style.display = 'inline';
           }
           return isValid;
+      }
+
+      const equalPassword = () => {
+        const newPW = document.getElementById('newPW');
+        const rePW = document.getElementById('rePW');
+        const repwSpan = document.getElementById('rePassword_');
+        const isValid = newPW.value === rePW.value;
+
+        if (isValid) {
+          repwSpan.style.display = 'none';
+        } else {
+          repwSpan.style.display = 'inline';
+        }
+        return isValid;
       }
 
       const validatePhone = () => {

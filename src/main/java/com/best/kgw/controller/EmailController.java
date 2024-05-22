@@ -2,6 +2,8 @@ package com.best.kgw.controller;
 
 import com.best.kgw.auth.EmailMessage;
 import com.best.kgw.service.EmailService;
+import com.best.kgw.service.LoginService;
+import com.vo.EmpVO;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +21,9 @@ public class EmailController {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private LoginService loginService;
+
     /**********************************************************************************
      작성자 : 이유리
      작성일자 : 24.02.29
@@ -26,15 +31,17 @@ public class EmailController {
      **********************************************************************************/
     @PostMapping("/sendPassword")
     @ResponseBody
-    public ResponseEntity sendPasswordEmail (String email) throws Exception {
-        logger.info("입력받은 email : " + email);
+    public ResponseEntity sendPasswordEmail (EmpVO empVO) throws Exception {
+        logger.info("입력받은 email : " + empVO.getEmail());
 
         EmailMessage emailMessage = EmailMessage.builder()
-                .to(email)
+                .to(empVO.getEmail())
                 .subject("임시비밀번호입니다.")
                 .build();
 
-        emailService.sendMail(emailMessage, "password");
+        String authNum = emailService.sendMail(emailMessage , "password");
+        empVO.setPassword(authNum);
+        loginService.updatePW(empVO);
 
         return ResponseEntity.ok().build();
     }
