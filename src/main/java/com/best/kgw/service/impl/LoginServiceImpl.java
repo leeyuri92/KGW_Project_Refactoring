@@ -49,6 +49,11 @@ public class LoginServiceImpl implements LoginService {
     return email;
   }
 
+  /**********************************************************************************
+   작성자 : 이유리
+   작성일자 : 24.05.21
+   기능 : 비밀번호변경 공통 모듈화
+   **********************************************************************************/
   @Override
   public int updatePW(EmpVO empVO) {
     logger.info("updatePW");

@@ -60,7 +60,6 @@
           location.href = "/";
       }
 
-
       function handleImgClick() {
           document.getElementById('profileImgInput').click();
       }
@@ -84,27 +83,17 @@
           }
       }
 
+      // 비동기 방식
       const updatePW = () => {
-        // if (validatePassword() && equalPassword()) {
-        //   // 유효성 검사 성공 시, SweetAlert를 사용하여 성공 메시지 표시 후 폼 제출
-        //   Swal.fire("비밀번호 변경 완료!", "", "success")
-        //           .then((result) => {
-        //             if (result.isConfirmed || result.isDismissed) {
-        //               document.querySelector("#m_updatePW").submit();
-        //             }
-        //           });
-        // } else {
-        //   // 유효성 검사 실패 시, SweetAlert를 사용하여 오류 메시지 표시
-        //   Swal.fire("오류!", "비밀번호 양식을 올바르게 입력해주세요.", "error");
-        // }
         if (validatePassword() && equalPassword()) {
+          // 유효성 검사 성공 시, ajax 처리
           console.log('updatePW 클릭')
           $.ajax({
             type: "POST",
             url: "updatePW",
             data: {
-              password: $('#newPW').val(),
-              emp_no: $('#emp_no').val()
+              emp_no: $('#emp_no').val(),
+              password: $('#newPW').val()
             },
             success: function (data) {
               console.log("받아온 data 값 : " + data);
@@ -131,10 +120,27 @@
             }
           })
         } else {
-          // 유효성 검사 실패 시, SweetAlert를 사용하여 오류 메시지 표시
+          // 유효성 검사 실패 시, 오류 메시지 표시
           Swal.fire("오류!", "비밀번호 양식을 올바르게 입력해주세요.", "error");
         }
       }
+
+      // 동기 방식
+      // const updatePW = () => {
+      //   if (validatePassword() && equalPassword()) {
+      //     // 유효성 검사 성공 시, 성공 메시지 표시 후 폼 제출
+      //     Swal.fire("비밀번호 변경 완료!", "", "success")
+      //             .then((result) => {
+      //               if (result.isConfirmed || result.isDismissed) {
+      //                 document.querySelector("#m_updatePW").submit();
+      //               }
+      //             });
+      //   } else {
+      //     // 유효성 검사 실패 시, 오류 메시지 표시
+      //     Swal.fire("오류!", "비밀번호 양식을 올바르게 입력해주세요.", "error");
+      //   }
+      // }
+
   </script>
 
 </head>
@@ -280,7 +286,6 @@
                 <label for="retire_date">퇴사일</label>
                 <input type="date" class="form-control" id="retire_date" name="retire_date" onblur="validate()" value="<%=empDetail.getRetire_date()%>" disabled>
               </div>
-
             </div>
 
 
@@ -318,8 +323,6 @@
               </div>
             </div>
             <br>
-            <br>
-            <br>
             <div class="row">
               <div class="col-6 mb-3 mt-3" style="display: flex; align-items: center; justify-content: center;">
                 <input type="button" class="btn btn-primary float-right" onclick="btn_Cancel()" value="취소"/>
@@ -354,7 +357,6 @@
               <input type="password" class="form-control rounded-3" id="rePW" onblur="equalPassword()" placeholder="">
               <label for="rePW">새 비밀번호 확인</label>
               <span id="rePassword_" class="text-danger mt-2" style="display:none"> 다시 한 번 확인해주세요.</span>
-
             </div>
             <button type="button" class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" style="background-color: #652C2C;"  onclick="updatePW()">변경 완료</button>
           </form>
@@ -386,8 +388,7 @@
           }).open();
       }
 
-      //비밀번호 정규식표현
-      const expPwText = /^[A-Za-z0-9]{4,12}$/;
+
       //핸드폰 정규식표현
       const expPhoneText = /^\d{3}-\d{3,4}-\d{4}$/;
       //이메일 정규실표현
@@ -406,6 +407,10 @@
         return isPhoneValid && isEmailValid && isAddressValid;
       }
 
+      // 비밀번호 정규식표현
+      const expPwText = /^[A-Za-z0-9]{4,12}$/;
+
+      // 비밀번호 유효성 검사
       const validatePassword = () => {
           const pwSpan = document.getElementById('password_');
           const mbrPwInput = document.getElementById('newPW');

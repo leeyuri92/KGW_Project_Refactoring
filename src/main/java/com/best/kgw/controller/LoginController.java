@@ -79,6 +79,7 @@ public class LoginController {
    작성일자 : 24.05.21
    기능 : 비밀번호변경 구현
    **********************************************************************************/
+  // 비동기 방식
   @PostMapping("/updatePW")
   @ResponseBody
   public int updatePW(EmpVO empVO) {
@@ -94,6 +95,7 @@ public class LoginController {
     }
   }
 
+    // 동기 방식
 //  @PostMapping("/updatePW")
 //  public String updatePW(EmpVO empVO, RedirectAttributes redirectAttributes) {
 //    logger.info("updatePW");
