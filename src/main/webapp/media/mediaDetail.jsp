@@ -3,6 +3,7 @@
 <%@ page import="java.util.*" %>
 <%@ page import="com.vo.MediaNoticeVO" %>
 <%@ page import="com.vo.MediaNoticeCommendVO" %>
+<%@ page import="java.text.SimpleDateFormat" %>
 
 <%
     /*상세조회 */
@@ -12,7 +13,22 @@
 
     List<MediaNoticeCommendVO> mediaNoticeCommend = (List)request.getAttribute("commendList");
 
-//    out.print(mediaNoticeList);
+    // 현재 시간
+    Date date = new Date();
+
+    // SimpleDateFormat을 사용하여 문자열을 Date 객체로 변환
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    String regDate = mediaVO.getReg_date();
+    Date regDateParsed = dateFormat.parse(regDate);;
+
+    // 두 날짜의 시간 차이를 밀리초 단위로 계산
+    long differenceInMilliSeconds = date.getTime() - regDateParsed.getTime();
+
+    // 밀리초를 초, 분, 시간, 일 단위로 변환
+    long differenceInSeconds = differenceInMilliSeconds / 1000;
+    long differenceInMinutes = differenceInSeconds / 60;
+    long differenceInHours = differenceInMinutes / 60;
+    long differenceInDays = differenceInHours / 24;
 
 %>
 
@@ -23,6 +39,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>우리구단소식 상세조회</title>
     <script>
+
         /*미디에게시글목록*/
         function mediaNoticeList(){
             location.href='/media/mediaNotice';
@@ -125,7 +142,25 @@
                                         </dl>
                                         <dl>
                                             <dt>작성일</dt>
-                                            <dd><%=mediaVO.getReg_date()%></dd>
+                                            <%
+                                                if (differenceInDays != 0) {
+                                            %>
+                                            <dd><%=regDate%></dd>
+                                            <%
+                                                } else if (differenceInHours != 0) {
+                                            %>
+                                            <dd><%=differenceInHours%>시간 전</dd>
+                                            <%
+                                                } else if (differenceInMinutes != 0) {
+                                                    %>
+                                            <dd><%=differenceInMinutes%>분 전</dd>
+                                            <%
+                                                } else {
+                                            %>
+                                            <dd><%=differenceInSeconds%>초 전</dd>
+                                            <%
+                                                }
+                                            %>
                                         </dl>
                                         <dl>
                                             <dt>수정일</dt>

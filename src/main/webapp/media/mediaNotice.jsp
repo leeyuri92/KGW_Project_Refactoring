@@ -4,10 +4,11 @@
 <%@ page import="java.util.*,com.util.BSPageBar" %>
 <%@ page import="com.vo.MediaNoticeVO" %>
 <%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="com.best.kgw.common.DateCalc" %>
 <%
   int size=0;
   List<MediaNoticeVO> mediaNoticeList = (List)request.getAttribute("mediaNoticeList");
-//  out.print(mediaNoticeList);
+
   if(mediaNoticeList!=null){
     size = mediaNoticeList.size();
   }
@@ -19,9 +20,6 @@
     nowPage = Integer.parseInt(request.getParameter("nowPage"));
 
   }
-
-  SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
-
 %>
 
 <!DOCTYPE html>
@@ -127,8 +125,24 @@
                 <%  for(int i = nowPage*numPerPage; i < (nowPage*numPerPage)+numPerPage; i++) {
                   if (i == size) break;
                   MediaNoticeVO mediaNoticeVO = mediaNoticeList.get(i);
-                  String originalString  = mediaNoticeVO.getReg_date();
-                  String newFormatString = originalString.substring(0, 10);
+
+                  DateCalc dc = new DateCalc();
+
+//                  Date date = new Date();
+//                  String regDate = mediaNoticeVO.getReg_date();
+//
+//                  // SimpleDateFormat을 사용하여 문자열을 Date 객체로 변환
+//                  SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//                  Date regDateParsed = dateFormat.parse(regDate);;
+//
+//                  // 두 날짜의 시간 차이를 밀리초 단위로 계산
+//                  long differenceInMilliSeconds = date.getTime() - regDateParsed.getTime();
+//
+//                  // 밀리초를 초, 분, 시간, 일 단위로 변환
+//                  long differenceInSeconds = differenceInMilliSeconds / 1000;
+//                  long differenceInMinutes = differenceInSeconds / 60;
+//                  long differenceInHours = differenceInMinutes / 60;
+//                  long differenceInDays = differenceInHours / 24;
                 %>
                 <div class="card mb-3 custom-card">
                   <div class="row g-0">
@@ -145,7 +159,27 @@
                           </a>
                         </p>
                         <p class="card-text">작성자 : <%=mediaNoticeVO.getName()%></p>
-                        <p class="card-text">작성일 : <%=newFormatString%></p>
+                        <p class="card-text">작성일 : <%=dc.daysBetween(mediaNoticeVO.getReg_date())%>
+<%--                          <%--%>
+<%--                            if (differenceInDays != 0) {--%>
+<%--                          %>--%>
+<%--                          <%=regDate%>--%>
+<%--                          <%--%>
+<%--                          } else if (differenceInHours != 0) {--%>
+<%--                          %>--%>
+<%--                          <%=differenceInHours%>시간 전--%>
+<%--                          <%--%>
+<%--                          } else if (differenceInMinutes != 0) {--%>
+<%--                          %>--%>
+<%--                          <%=differenceInMinutes%>분 전--%>
+<%--                          <%--%>
+<%--                          } else {--%>
+<%--                          %>--%>
+<%--                          <%=differenceInSeconds%>초 전--%>
+<%--                          <%--%>
+<%--                            }--%>
+<%--                          %>--%>
+                        </p>
                         <p class="card-text">
                           <small class="text-body-secondary">조회수 : <%=mediaNoticeVO.getBoard_hit()%></small>
                         </p>
