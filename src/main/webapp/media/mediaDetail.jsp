@@ -3,7 +3,7 @@
 <%@ page import="java.util.*" %>
 <%@ page import="com.vo.MediaNoticeVO" %>
 <%@ page import="com.vo.MediaNoticeCommendVO" %>
-<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="com.best.kgw.common.TimeUtil" %>
 
 <%
     /*상세조회 */
@@ -12,23 +12,6 @@
     MediaNoticeVO mediaVO = mediaNoticeList.get(0);
 
     List<MediaNoticeCommendVO> mediaNoticeCommend = (List)request.getAttribute("commendList");
-
-    // 현재 시간
-    Date date = new Date();
-
-    // SimpleDateFormat을 사용하여 문자열을 Date 객체로 변환
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    String regDate = mediaVO.getReg_date();
-    Date regDateParsed = dateFormat.parse(regDate);;
-
-    // 두 날짜의 시간 차이를 밀리초 단위로 계산
-    long differenceInMilliSeconds = date.getTime() - regDateParsed.getTime();
-
-    // 밀리초를 초, 분, 시간, 일 단위로 변환
-    long differenceInSeconds = differenceInMilliSeconds / 1000;
-    long differenceInMinutes = differenceInSeconds / 60;
-    long differenceInHours = differenceInMinutes / 60;
-    long differenceInDays = differenceInHours / 24;
 
 %>
 
@@ -142,25 +125,7 @@
                                         </dl>
                                         <dl>
                                             <dt>작성일</dt>
-                                            <%
-                                                if (differenceInDays != 0) {
-                                            %>
-                                            <dd><%=regDate%></dd>
-                                            <%
-                                                } else if (differenceInHours != 0) {
-                                            %>
-                                            <dd><%=differenceInHours%>시간 전</dd>
-                                            <%
-                                                } else if (differenceInMinutes != 0) {
-                                                    %>
-                                            <dd><%=differenceInMinutes%>분 전</dd>
-                                            <%
-                                                } else {
-                                            %>
-                                            <dd><%=differenceInSeconds%>초 전</dd>
-                                            <%
-                                                }
-                                            %>
+                                            <dd><%=mediaVO.getReg_date()%></dd>
                                         </dl>
                                         <dl>
                                             <dt>수정일</dt>
@@ -188,19 +153,24 @@
                                 <%--댓글목록--%>
                                 <div class="comment-list">
                                     <div class="comment-list">
-                                        <label for="commendContent" class="form-label">댓글 (<%=mediaVO.getCommend_cnt()%>)</label>
+                                        <label for="commendContent" class="form-label">댓글 (<%=mediaVO.getCommend_cnt()%>) </label>
                                         <%
                                             int size2 = mediaNoticeCommend.size();
                                             if (size2>0){
                                                 for(int i=0; i <size2; i++){
                                                     MediaNoticeCommendVO commendVO =mediaNoticeCommend.get(i);
+                                                    // New 배지 표시를 위한 댓글 작성일로부터의 일 수 계산
+                                                    long days = TimeUtil.newBadge(commendVO.getReg_date());
                                         %>
                                         <div class="comment">
                                             <input type="hidden" class="board_no" value="<%=mediaVO.getBoard_no()%>">
                                             <img src="/fileUpload/profile/<%=commendVO.getEmp_no()%>.png" class="user-avatar" alt="user-avatar">
                                             <div class="comment-content">
                                                 <p class="user-name"><%=commendVO.getName()%></p>
-                                                <p class="comment-text"><%=commendVO.getCommend_content()%></p>
+                                                <p class="comment-text"><%=commendVO.getCommend_content()%>
+                                                    <% if (days < 2) { %>
+                                                    <span class="badge badge-small text-bg-danger">New</span>
+                                                    <% } %></p>
                                                 <div class="row">
                                                     <div class="col-9">
                                                         <p class="comment-date"><%=commendVO.getReg_date()%></p>

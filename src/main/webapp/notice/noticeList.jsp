@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*,com.util.BSPageBar" %>
 <%@ page import="com.vo.NoticeBoardVO" %>
-<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="com.best.kgw.common.TimeUtil" %>
 <%
     int size=0;
     List<NoticeBoardVO> noticeList = (List)request.getAttribute("noticeList");
@@ -15,8 +15,6 @@
     if(request.getParameter("nowPage")!=null){
         nowPage = Integer.parseInt(request.getParameter("nowPage"));
     }
-
-    SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
 
 %>
 <!DOCTYPE html>
@@ -127,11 +125,15 @@
                                     </thead>
                                     <hr />
                                     <tbody>
-                                    <% for (int i = nowPage * numPerPage; i < (nowPage * numPerPage) + numPerPage; i++) {
+                                    <%
+                                        for (int i = nowPage * numPerPage; i < (nowPage * numPerPage) + numPerPage; i++) {
                                         if (i == size) break;
                                         NoticeBoardVO noticeVO = noticeList.get(i);
                                         String originalString  = noticeVO.getReg_date();
                                         String newFormatString = originalString.substring(0, 10);
+
+                                        // New 배지 표시를 위한 작성일로부터의 일 수 계산
+                                        long days = TimeUtil.newBadge(noticeVO.getReg_date());
                                     %>
                                     <tr>
                                         <td>
@@ -152,6 +154,9 @@
                                         <td>
                                             <a href="javascript:noticeDetail('<%=noticeVO.getNotice_no()%>')">
                                                 <%=noticeVO.getNotice_title()%>
+                                                <% if (days < 2) { %>
+                                                <span class="badge badge-small text-bg-danger">New</span>
+                                                <% } %>
                                             </a>
 
                                         </td>

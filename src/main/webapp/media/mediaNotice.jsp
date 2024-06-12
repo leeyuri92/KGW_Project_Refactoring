@@ -3,8 +3,7 @@
 <%@ page import="java.util.*" %>
 <%@ page import="java.util.*,com.util.BSPageBar" %>
 <%@ page import="com.vo.MediaNoticeVO" %>
-<%@ page import="java.text.SimpleDateFormat" %>
-<%@ page import="com.best.kgw.common.DateCalc" %>
+<%@ page import="com.best.kgw.common.TimeUtil" %>
 <%
   int size=0;
   List<MediaNoticeVO> mediaNoticeList = (List)request.getAttribute("mediaNoticeList");
@@ -18,7 +17,6 @@
   int nowPage = 0;
   if(request.getParameter("nowPage")!=null){
     nowPage = Integer.parseInt(request.getParameter("nowPage"));
-
   }
 %>
 
@@ -122,31 +120,16 @@
               <!------------------------- [[ 미디어게시판목록 시작 ]] ------------------------->
               <div class='board-list'>
 
-                <%  for(int i = nowPage*numPerPage; i < (nowPage*numPerPage)+numPerPage; i++) {
+                <%
+                  for(int i = nowPage*numPerPage; i < (nowPage*numPerPage)+numPerPage; i++) {
                   if (i == size) break;
                   MediaNoticeVO mediaNoticeVO = mediaNoticeList.get(i);
 
-                  DateCalc dc = new DateCalc();
-
-//                  Date date = new Date();
-//                  String regDate = mediaNoticeVO.getReg_date();
-//
-//                  // SimpleDateFormat을 사용하여 문자열을 Date 객체로 변환
-//                  SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//                  Date regDateParsed = dateFormat.parse(regDate);;
-//
-//                  // 두 날짜의 시간 차이를 밀리초 단위로 계산
-//                  long differenceInMilliSeconds = date.getTime() - regDateParsed.getTime();
-//
-//                  // 밀리초를 초, 분, 시간, 일 단위로 변환
-//                  long differenceInSeconds = differenceInMilliSeconds / 1000;
-//                  long differenceInMinutes = differenceInSeconds / 60;
-//                  long differenceInHours = differenceInMinutes / 60;
-//                  long differenceInDays = differenceInHours / 24;
+                  // New 배지 표시를 위한 작성일로부터의 일 수 계산
+                  long days = TimeUtil.newBadge(mediaNoticeVO.getReg_date());
                 %>
                 <div class="card mb-3 custom-card">
                   <div class="row g-0">
-
                     <div class="col-md-4">
                       <%------------------------- [[ 이미지의 경로를 가져오는 코드 ]]-------------------------%>
                       <img src="/fileUpload/media/<%=mediaNoticeVO.getFilename()%>/" class="img-fluid rounded-start" alt="...이미지 없음 ">
@@ -156,30 +139,15 @@
                         <p class="card-link">
                           <a href="javascript:mediaDetail('<%=mediaNoticeVO.getBoard_no()%>')" class="link-styled">
                             <%=mediaNoticeVO.getBoard_title()%> [<%=mediaNoticeVO.getCommend_cnt()%>]
+                            <%
+                              if (days < 2) {
+                            %>
+                            <span class="badge badge-small text-bg-danger">New</span>
+                            <% } %>
                           </a>
                         </p>
                         <p class="card-text">작성자 : <%=mediaNoticeVO.getName()%></p>
-                        <p class="card-text">작성일 : <%=dc.daysBetween(mediaNoticeVO.getReg_date())%>
-<%--                          <%--%>
-<%--                            if (differenceInDays != 0) {--%>
-<%--                          %>--%>
-<%--                          <%=regDate%>--%>
-<%--                          <%--%>
-<%--                          } else if (differenceInHours != 0) {--%>
-<%--                          %>--%>
-<%--                          <%=differenceInHours%>시간 전--%>
-<%--                          <%--%>
-<%--                          } else if (differenceInMinutes != 0) {--%>
-<%--                          %>--%>
-<%--                          <%=differenceInMinutes%>분 전--%>
-<%--                          <%--%>
-<%--                          } else {--%>
-<%--                          %>--%>
-<%--                          <%=differenceInSeconds%>초 전--%>
-<%--                          <%--%>
-<%--                            }--%>
-<%--                          %>--%>
-                        </p>
+                        <p class="card-text">작성일 : <%=TimeUtil.daysBetween(mediaNoticeVO.getReg_date())%></p>
                         <p class="card-text">
                           <small class="text-body-secondary">조회수 : <%=mediaNoticeVO.getBoard_hit()%></small>
                         </p>
