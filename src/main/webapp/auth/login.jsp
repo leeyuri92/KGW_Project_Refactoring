@@ -174,10 +174,10 @@
                 <label for="emp_no" class="form-label">사원번호</label>
                 <input type="text" id="emp_no" name="emp_no" class="form-control" placeholder="사원번호를 입력하세요." onkeyup="loginEnter()">
             </div>
-<%--            <div class="m-2 login-options">--%>
-<%--                <input type="checkbox" id="remember-me" class="form-check-input">--%>
-<%--                <label for="remember-me" class="form-check-label">사원번호 기억하기</label>--%>
-<%--            </div>--%>
+            <div class="m-2 login-options">
+                <input type="checkbox" id="remember-me" class="form-check-input">
+                <label for="remember-me" class="form-check-label">사원번호 기억하기</label>
+            </div>
             <div class="mb-2">
                 <label for="password" class="form-label">비밀번호</label>
                 <input type="password" id="password" name="password" class="form-control "  placeholder="비밀번호를 입력하세요." onkeyup="loginEnter()">
