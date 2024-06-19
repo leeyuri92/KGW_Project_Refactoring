@@ -7,11 +7,11 @@
 
 <%
     /*상세조회 */
-    int size=0;
     List<MediaNoticeVO> mediaNoticeList = (List)request.getAttribute("mediaNoticeDetail");
     MediaNoticeVO mediaVO = mediaNoticeList.get(0);
 
     List<MediaNoticeCommendVO> mediaNoticeCommend = (List)request.getAttribute("commendList");
+    int commendSize = mediaNoticeCommend.size();
 
 %>
 
@@ -153,24 +153,24 @@
                                 <%--댓글목록--%>
                                 <div class="comment-list">
                                     <div class="comment-list">
-                                        <label for="commendContent" class="form-label">댓글 (<%=mediaVO.getCommend_cnt()%>) </label>
+                                        <label for="commendContent" class="form-label">댓글 (<%=mediaVO.getCommend_cnt()%>)
+                                            <%  if(commendSize > 0){
+                                                long days = TimeUtil.newBadge(mediaNoticeCommend.get(0).getReg_date());
+                                                    if (days < 2) { %>
+                                            <span class="badge badge-small text-bg-danger">New</span>
+                                                <% }
+                                                }%></label>
                                         <%
-                                            int size2 = mediaNoticeCommend.size();
-                                            if (size2>0){
-                                                for(int i=0; i <size2; i++){
+                                            if (commendSize > 0){
+                                                for(int i = 0; i < commendSize; i++){
                                                     MediaNoticeCommendVO commendVO =mediaNoticeCommend.get(i);
-                                                    // New 배지 표시를 위한 댓글 작성일로부터의 일 수 계산
-                                                    long days = TimeUtil.newBadge(commendVO.getReg_date());
                                         %>
                                         <div class="comment">
                                             <input type="hidden" class="board_no" value="<%=mediaVO.getBoard_no()%>">
                                             <img src="/fileUpload/profile/<%=commendVO.getEmp_no()%>.png" class="user-avatar" alt="user-avatar">
                                             <div class="comment-content">
                                                 <p class="user-name"><%=commendVO.getName()%></p>
-                                                <p class="comment-text"><%=commendVO.getCommend_content()%>
-                                                    <% if (days < 2) { %>
-                                                    <span class="badge badge-small text-bg-danger">New</span>
-                                                    <% } %></p>
+                                                <p class="comment-text"><%=commendVO.getCommend_content()%></p>
                                                 <div class="row">
                                                     <div class="col-9">
                                                         <p class="comment-date"><%=commendVO.getReg_date()%></p>
