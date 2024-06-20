@@ -154,12 +154,12 @@
                                 <div class="comment-list">
                                     <div class="comment-list">
                                         <label for="commendContent" class="form-label">댓글 (<%=mediaVO.getCommend_cnt()%>)
-                                            <%  if(commendSize > 0){
+                                        <%  if(commendSize > 0){
                                                 long days = TimeUtil.newBadge(mediaNoticeCommend.get(0).getReg_date());
-                                                    if (days < 2) { %>
-                                            <span class="badge badge-small text-bg-danger">New</span>
+                                                if (days < 2) { %>
+                                                    <span class="badge badge-small text-bg-danger">New</span>
                                                 <% }
-                                                }%></label>
+                                            }%></label>
                                         <%
                                             if (commendSize > 0){
                                                 for(int i = 0; i < commendSize; i++){
