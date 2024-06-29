@@ -162,6 +162,98 @@
                 }
             });
         }
+
+        //
+        // $(document).ready(() => {
+        //     const key = getCookie("key");
+        //     $("#emp_no").val(key);
+        //
+        //     if ($("#emp_no").val() !== "") {
+        //         $("#remember-me").attr("checked", true);
+        //     }
+        //
+        //     $("#remember-me").change(() => {
+        //         if ($("#remember-me").is(":checked")) {
+        //             setCookie("key", $("#emp_no").val(), 7);
+        //         } else {
+        //             deleteCookie("key");
+        //         }
+        //     });
+        //
+        //     $("#emp_no").keyup(() => {
+        //         if ($("#remember-me").is(":checked")) {
+        //             setCookie("key", $("#emp_no").val(), 7);
+        //         }
+        //     });
+        // });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const key = getCookie("key");
+            const empNoInput = document.getElementById("emp_no");
+            const rememberMeCheckbox = document.getElementById("remember-me");
+
+            empNoInput.value = key;
+
+            // 처음 페이지 로딩 시, key 값이 있다면 체크박스를 체크
+            if (empNoInput.value !== "") {
+                rememberMeCheckbox.checked = true;
+            }
+
+            // 체크박스에 변화가 있을 때
+            rememberMeCheckbox.addEventListener('change', () => {
+                if (rememberMeCheckbox.checked) {
+                    setCookie("key", empNoInput.value, 7);
+                } else {
+                    deleteCookie("key");
+                }
+            });
+
+            // 입력필드에 입력 할 때마다 체크박스 상태 확인
+            empNoInput.addEventListener('keyup', () => {
+                if (rememberMeCheckbox.checked) {
+                    setCookie("key", empNoInput.value, 7);
+                }
+            });
+        });
+
+        const setCookie = (cookieName, value, exdays) => {
+            const exdate = new Date();
+            // 현재 날짜에 유효기간을 더해 만료날짜 설정
+            exdate.setDate(exdate.getDate() + exdays);
+            // expires는 쿠키의 만료 날짜를 지정하는 표준 속성
+            const cookieValue = encodeURIComponent(value) + ((exdays === null) ? "" : "; expires=" + exdate.toGMTString());
+            console.log("cookieValue : " + cookieValue); //cookieValue : 1004; expires=Sat, 06 Jul 2024 07:12:54 GMT
+            document.cookie = `\${cookieName}=\${cookieValue}`;
+            // document.cookie = cookieName + "=" + cookieValue;
+        };
+
+        const deleteCookie = (cookieName) => {
+            const expireDate = new Date();
+            // 현재날짜보다 -1을 해서 과거 날짜로 입력하여 즉시 삭제하도록 구현
+            expireDate.setDate(expireDate.getDate() - 1);
+            document.cookie = `\${cookieName}=; expires=\${expireDate.toGMTString()}`;
+            // document.cookie = cookieName + "= " + "; expires="
+            //     + expireDate.toGMTString();
+        };
+
+        const getCookie = (cookieName) => {
+            const name = `\${cookieName}=`; // key=
+            // name = cookieName + '=';
+            const cookieData = document.cookie; // key=1004
+            let start = cookieData.indexOf(name); // 0
+            let cookieValue = '';
+            if (start !== -1) {
+                start += name.length;
+                // ; 문자가 있는 곳이 쿠키의 끝
+                let end = cookieData.indexOf(';', start);
+                // ; 문자가 없다면 문자열 마지막이 쿠키의 끝
+                if (end === -1) end = cookieData.length;
+                // 쿠키 값만 추출
+                cookieValue = cookieData.substring(start, end); // 1004
+            }
+            return decodeURIComponent(cookieValue);
+        };
+
     </script>
 </head>
 <body>
